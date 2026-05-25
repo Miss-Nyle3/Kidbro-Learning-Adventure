@@ -1,0 +1,2431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<!-- SECURITY HEADERS -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data:;
+  connect-src 'self';
+  manifest-src 'self';
+  worker-src 'self';
+">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KidBro Learning Adventure 🌟</title>
+
+<!-- PWA META TAGS -->
+<meta name="application-name" content="KidBro Learn">
+<meta name="description" content="A fun daily learning adventure for Basic 1 kids — Maths, English, Science, Creative Arts and General Knowledge!">
+<meta name="theme-color" content="#9B5DE5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KidBro Learn">
+
+<!-- PWA MANIFEST & ICONS -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFD93D;
+    --orange: #FF6B35;
+    --blue: #4ECDC4;
+    --purple: #9B5DE5;
+    --green: #06D6A0;
+    --pink: #FF6B9D;
+    --red: #FF4949;
+    --bg: #FFF9F0;
+    --card: #FFFFFF;
+    --text: #2D2D2D;
+    --shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ANIMATED BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 0% 0%, rgba(255,107,53,0.22) 0%, transparent 50%),
+      radial-gradient(ellipse at 100% 0%, rgba(155,93,229,0.25) 0%, transparent 50%),
+      radial-gradient(ellipse at 100% 100%, rgba(78,205,196,0.2) 0%, transparent 50%),
+      radial-gradient(ellipse at 0% 100%, rgba(255,217,61,0.2) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(255,107,157,0.1) 0%, transparent 60%);
+    z-index: 0;
+    pointer-events: none;
+    animation: bgPulse 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes bgPulse {
+    0%   { opacity: 0.8; }
+    50%  { opacity: 1; }
+    100% { opacity: 0.85; }
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(255,217,61,0.18) 1px, transparent 1px),
+      radial-gradient(circle, rgba(155,93,229,0.12) 1px, transparent 1px);
+    background-size: 60px 60px, 40px 40px;
+    background-position: 0 0, 30px 30px;
+    z-index: 0;
+    pointer-events: none;
+    animation: dotDrift 20s linear infinite;
+  }
+
+  @keyframes dotDrift {
+    from { background-position: 0 0, 30px 30px; }
+    to   { background-position: 60px 60px, 90px 90px; }
+  }
+
+  .floating-emoji {
+    position: fixed;
+    font-size: 2rem;
+    animation: floatAround linear infinite;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes floatAround {
+    0% { transform: translateY(100vh) rotate(0deg); }
+    100% { transform: translateY(-100px) rotate(360deg); }
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    z-index: 10;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--orange) 100%);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(155,93,229,0.4);
+  }
+
+  .logo {
+    font-family: 'Baloo 2', cursive;
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: white;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+  }
+
+  .logo span { color: var(--yellow); }
+
+  .stars-display {
+    background: rgba(255,255,255,0.2);
+    border-radius: 50px;
+    padding: 8px 18px;
+    color: white;
+    font-weight: 800;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(10px);
+  }
+
+  /* DAY SELECTOR */
+  .day-selector {
+    position: relative;
+    z-index: 10;
+    padding: 20px 24px 10px;
+    text-align: center;
+  }
+
+  .day-selector h2 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem;
+    color: var(--purple);
+    margin-bottom: 12px;
+  }
+
+  .day-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .day-tab {
+    background: white;
+    border: 3px solid transparent;
+    border-radius: 50px;
+    padding: 8px 18px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    white-space: nowrap;
+    color: var(--text);
+  }
+
+  .day-tab:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+  .day-tab.active {
+    background: linear-gradient(135deg, var(--purple), var(--orange));
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+  }
+  .day-tab.completed::after { content: ' ✅'; }
+
+  /* MAIN CONTENT */
+  main {
+    position: relative;
+    z-index: 10;
+    padding: 16px 20px 40px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  /* SUBJECT CARD */
+  .subject-card {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 28px;
+    padding: 26px;
+    margin-bottom: 22px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.8) inset;
+    border-left: 6px solid;
+    border-top: 1px solid rgba(255,255,255,0.9);
+    animation: slideUp 0.4s ease both;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .subject-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.13), 0 1px 0 rgba(255,255,255,0.8) inset;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .subject-card:nth-child(1) { border-color: var(--blue); animation-delay: 0.05s; }
+  .subject-card:nth-child(2) { border-color: var(--orange); animation-delay: 0.1s; }
+  .subject-card:nth-child(3) { border-color: var(--green); animation-delay: 0.15s; }
+  .subject-card:nth-child(4) { border-color: var(--pink); animation-delay: 0.2s; }
+  .subject-card:nth-child(5) { border-color: var(--purple); animation-delay: 0.25s; }
+
+  .subject-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .subject-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    flex-shrink: 0;
+    position: relative;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.3);
+    transition: transform 0.2s;
+  }
+
+  .subject-icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .subject-card:hover .subject-icon {
+    transform: scale(1.1) rotate(-4deg);
+  }
+
+  .icon-math    { background: linear-gradient(135deg, #00C6FB, #005BEA); }
+  .icon-english { background: linear-gradient(135deg, #f7971e, #ffd200); }
+  .icon-science { background: linear-gradient(135deg, #11998e, #38ef7d); }
+  .icon-creative{ background: linear-gradient(135deg, #f953c6, #b91d73); }
+  .icon-gk      { background: linear-gradient(135deg, #7F00FF, #E100FF); }
+
+  .subject-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .subject-subtitle {
+    font-size: 0.85rem;
+    color: #888;
+    font-weight: 600;
+  }
+
+  /* LESSON CONTENT */
+  .lesson-box {
+    background: linear-gradient(135deg, rgba(248,249,255,0.9), rgba(240,248,255,0.9));
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(155,93,229,0.1);
+    box-shadow: 0 2px 12px rgba(155,93,229,0.06);
+  }
+
+  .lesson-box h4 {
+    font-family: 'Baloo 2', cursive;
+    color: var(--purple);
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+
+  .lesson-box p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .highlight-word {
+    background: var(--yellow);
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-weight: 700;
+  }
+
+  /* QUIZ */
+  .quiz-section h4 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .question-block {
+    background: rgba(255,255,255,0.95);
+    border: 2px solid rgba(200,200,230,0.5);
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .question-block:hover {
+    box-shadow: 0 4px 16px rgba(155,93,229,0.1);
+  }
+
+  .question-block.correct { border-color: var(--green); background: #F0FFF8; }
+  .question-block.wrong { border-color: var(--red); background: #FFF0F0; }
+
+  .question-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .option-btn {
+    background: #F5F5F5;
+    border: 2px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    color: var(--text);
+  }
+
+  .option-btn:hover:not(:disabled) {
+    background: var(--yellow);
+    border-color: var(--orange);
+    transform: scale(1.02);
+  }
+
+  .option-btn.correct-ans { background: var(--green); border-color: #04A87A; color: white; }
+  .option-btn.wrong-ans { background: var(--red); border-color: #CC0000; color: white; }
+
+  .feedback {
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: none;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .feedback.show { display: flex; }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong { color: var(--red); }
+
+  /* FUN FACT BOX */
+  .fun-fact {
+    background: linear-gradient(135deg, #FFF9E6, #FFF0CC);
+    border: 2px dashed var(--yellow);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .fun-fact .bulb { font-size: 1.5rem; flex-shrink: 0; }
+  .fun-fact p { font-size: 0.92rem; color: #5A4000; font-weight: 600; line-height: 1.6; }
+
+  /* ACTIVITY BOX */
+  .activity-box {
+    background: linear-gradient(135deg, #F0F0FF, #E8F8FF);
+    border-radius: 16px;
+    padding: 16px;
+    margin-top: 12px;
+    border: 2px solid rgba(155,93,229,0.2);
+  }
+
+  .activity-box h5 {
+    font-family: 'Baloo 2', cursive;
+    color: var(--purple);
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .activity-box p { font-size: 0.9rem; color: #444; line-height: 1.6; }
+
+  /* FILL IN THE BLANK */
+  .fill-input {
+    border: 3px solid var(--blue);
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    width: 120px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .fill-input:focus { border-color: var(--purple); }
+  .fill-input.correct { border-color: var(--green); background: #F0FFF8; }
+  .fill-input.wrong { border-color: var(--red); background: #FFF0F0; }
+
+  .check-btn {
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 24px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 12px;
+    display: block;
+  }
+
+  .check-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(155,93,229,0.4); }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    height: 10px;
+    background: #EEE;
+    border-radius: 50px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple), var(--orange));
+    border-radius: 50px;
+    transition: width 0.5s ease;
+  }
+
+  /* DAY COMPLETE MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: 32px;
+    padding: 40px 32px;
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-emoji { font-size: 4rem; display: block; margin-bottom: 12px; }
+  .modal h2 { font-family: 'Baloo 2', cursive; font-size: 1.8rem; color: var(--purple); margin-bottom: 8px; }
+  .modal p { color: #666; font-size: 1rem; margin-bottom: 20px; line-height: 1.6; }
+  .modal-stars { font-size: 1.5rem; letter-spacing: 4px; margin-bottom: 20px; }
+
+  .modal-btn {
+    background: linear-gradient(135deg, var(--purple), var(--orange));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 36px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .modal-btn:hover { transform: scale(1.05); }
+
+  /* CONFETTI */
+  .confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+    z-index: 200;
+    pointer-events: none;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* WELCOME SCREEN */
+  .welcome-screen {
+    text-align: center;
+    padding: 30px 20px;
+  }
+
+  .welcome-screen .big-emoji { font-size: 5rem; display: block; margin-bottom: 20px; animation: bounce 1s ease infinite alternate; }
+
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-12px); }
+  }
+
+  .welcome-screen h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 2.2rem;
+    color: var(--purple);
+    margin-bottom: 10px;
+    text-shadow: 3px 3px 0 rgba(155,93,229,0.15);
+  }
+
+  .welcome-screen p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+
+  .name-input-wrap {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .name-input {
+    border: 3px solid var(--purple);
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem;
+    outline: none;
+    width: 220px;
+    text-align: center;
+    color: var(--text);
+  }
+
+  .start-btn {
+    background: linear-gradient(135deg, var(--purple), var(--orange));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 36px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(155,93,229,0.4);
+    transition: all 0.2s;
+  }
+
+  .start-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(155,93,229,0.5); }
+
+  .hidden { display: none; }
+
+  /* SUBJECT COLORS */
+  .icon-math { background: linear-gradient(135deg, #4ECDC4, #44A8A8); }
+  .icon-english { background: linear-gradient(135deg, #FF6B35, #E8542A); }
+  .icon-science { background: linear-gradient(135deg, #06D6A0, #04A87A); }
+  .icon-creative { background: linear-gradient(135deg, #FF6B9D, #E84F87); }
+  .icon-gk { background: linear-gradient(135deg, #9B5DE5, #7A3DC4); }
+
+  /* COUNTING OBJECTS */
+  .counting-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .count-obj { font-size: 1.8rem; cursor: pointer; transition: transform 0.15s; user-select: none; }
+  .count-obj:hover { transform: scale(1.2); }
+  .count-obj.counted { opacity: 0.4; }
+
+  /* ALPHABET GRID */
+  .alpha-grid { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .alpha-letter {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--blue), #2BA8A0);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  }
+  .alpha-letter:hover { transform: scale(1.15) rotate(5deg); }
+
+  /* RESPONSIVE */
+  @media (max-width: 480px) {
+    header { padding: 14px 16px; }
+    .logo { font-size: 1.4rem; }
+    .options { grid-template-columns: 1fr; }
+    .subject-card { padding: 18px; }
+    .welcome-screen h1 { font-size: 1.7rem; }
+  }
+
+  /* PREV / NEXT NAV BUTTONS */
+  .day-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 20px;
+    max-width: 800px;
+    margin: 0 auto 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+    background: rgba(255,249,240,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 2px solid rgba(155,93,229,0.12);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+  }
+
+  .nav-btn {
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 13px 28px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 18px rgba(155,93,229,0.4);
+    transition: all 0.2s;
+    min-width: 130px;
+    justify-content: center;
+    letter-spacing: 0.3px;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(155,93,229,0.45);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .nav-btn.next-btn {
+    background: linear-gradient(135deg, var(--orange), var(--pink));
+    box-shadow: 0 4px 16px rgba(255,107,53,0.35);
+  }
+
+  .nav-btn.next-btn:hover:not(:disabled) {
+    box-shadow: 0 8px 24px rgba(255,107,53,0.45);
+  }
+
+  .day-indicator {
+    font-family: 'Baloo 2', cursive;
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--purple);
+    text-align: center;
+    flex: 1;
+    line-height: 1.3;
+  }
+
+  .day-indicator span {
+    background: linear-gradient(135deg, var(--purple), var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.4rem;
+    display: block;
+  }
+
+  .day-indicator small {
+    font-size: 0.75rem;
+    color: #999;
+    font-weight: 600;
+    display: block;
+    margin-top: 1px;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Floating background emojis -->
+<div class="floating-emoji" style="left:5%;animation-duration:12s;animation-delay:0s">🌈</div>
+<div class="floating-emoji" style="left:20%;animation-duration:15s;animation-delay:3s">⭐</div>
+<div class="floating-emoji" style="left:40%;animation-duration:10s;animation-delay:6s">🎈</div>
+<div class="floating-emoji" style="left:65%;animation-duration:14s;animation-delay:1s">🦋</div>
+<div class="floating-emoji" style="left:85%;animation-duration:11s;animation-delay:4s">🌸</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">Kid<span>Bro</span> 🌟 Learn</div>
+  <div class="stars-display">⭐ <span id="star-count">0</span> Stars</div>
+</header>
+
+<!-- WELCOME SCREEN -->
+<div id="welcome-screen">
+  <main>
+    <div class="welcome-screen">
+      <span class="big-emoji">🎒</span>
+      <h1>Welcome to Your Learning Adventure!</h1>
+      <p>Every day is a new adventure full of <strong>fun lessons</strong>, <strong>cool facts</strong>, and <strong>exciting activities</strong>! What's your name, champion? 🏆</p>
+      <div class="name-input-wrap">
+        <input type="text" class="name-input" id="student-name" placeholder="Your name..." maxlength="20">
+        <button class="start-btn" onclick="startLearning()">Let's Go! 🚀</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MAIN LEARNING SCREEN -->
+<div id="learning-screen" class="hidden">
+  <div class="day-selector">
+    <h2>📅 Choose Your Day</h2>
+    <div class="day-tabs" id="day-tabs"></div>
+  </div>
+
+  <!-- PREV / NEXT NAVIGATION -->
+  <div class="day-nav">
+    <button class="nav-btn prev-btn" id="prev-btn" onclick="goToPrevDay()" disabled>
+      ◀ Previous
+    </button>
+    <div class="day-indicator">
+      <span id="day-indicator-num">Day 1</span>
+      <small>of 10 days</small>
+    </div>
+    <button class="nav-btn next-btn" id="next-btn" onclick="goToNextDay()">
+      Next ▶
+    </button>
+  </div>
+
+  <main id="lesson-content"></main>
+</div>
+
+<!-- COMPLETION MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <span class="modal-emoji">🎉</span>
+    <h2>Day Complete!</h2>
+    <div class="modal-stars" id="modal-stars"></div>
+    <p id="modal-message">Amazing work today! You are getting smarter every day! Keep it up, champion!</p>
+    <button class="modal-btn" onclick="closeModal()">Keep Learning! 🚀</button>
+  </div>
+</div>
+
+<script>
+// ==================== DATA ====================
+
+const DAYS = [
+  {
+    day: 1,
+    title: "Day 1",
+    subjects: [
+      {
+        type: "math",
+        icon: "➕",
+        iconClass: "icon-math",
+        title: "Mathematics",
+        subtitle: "Numbers & Counting",
+        lesson: {
+          title: "📚 Let's Learn: Numbers 1 – 10",
+          text: `Numbers are everywhere around us! We use them to count things. Look at these numbers: <span class="highlight-word">1, 2, 3, 4, 5, 6, 7, 8, 9, 10</span>. When we count, we say each number once for every thing we count. One mango 🥭, two mangoes 🥭🥭, three mangoes 🥭🥭🥭! Let's practice counting together!`
+        },
+        activity: {
+          type: "count",
+          objects: ["🍎","🍎","🍎","🍎","🍎"],
+          label: "Click each apple to count it! How many apples are there?"
+        },
+        quiz: [
+          { q: "How many fingers do you have on ONE hand?", opts: ["3","4","5","6"], ans: 2 },
+          { q: "What number comes after 7?", opts: ["6","9","5","8"], ans: 3 },
+          { q: "How many eyes do you have?", opts: ["3","4","1","2"], ans: 3 },
+          { q: "Count: 🐟🐟🐟 — How many fish?", opts: ["2","4","3","5"], ans: 2 }
+        ],
+        funFact: "Did you know? The number ZERO (0) was invented in India over 1,500 years ago! Before zero, people couldn't write the number 10 easily. Zero is super important! 🤯"
+      },
+      {
+        type: "english",
+        icon: "🔤",
+        iconClass: "icon-english",
+        title: "English Language",
+        subtitle: "The Alphabet",
+        lesson: {
+          title: "📚 Let's Learn: Vowels A, E, I, O, U",
+          text: `The English alphabet has <span class="highlight-word">26 letters</span>. Among these, 5 special letters are called <span class="highlight-word">VOWELS</span>: <strong>A, E, I, O, U</strong>. Every word you say needs a vowel! <br><br>🍎 <strong>A</strong> is for Apple &nbsp; 🥚 <strong>E</strong> is for Egg &nbsp; 🍦 <strong>I</strong> is for Ice cream &nbsp; 🍊 <strong>O</strong> is for Orange &nbsp; ☂️ <strong>U</strong> is for Umbrella`
+        },
+        activity: {
+          type: "alphabet",
+          label: "Touch each letter to hear its name! Find the 5 vowels — they are special! 🌟"
+        },
+        quiz: [
+          { q: "Which of these is a VOWEL?", opts: ["B","C","E","D"], ans: 2 },
+          { q: "'Apple' starts with which letter?", opts: ["U","A","I","O"], ans: 1 },
+          { q: "How many vowels are in the alphabet?", opts: ["3","6","4","5"], ans: 3 },
+          { q: "Which word starts with a VOWEL?", opts: ["Cat","Dog","Elephant","Fish"], ans: 2 }
+        ],
+        funFact: "In Ghana, our Twi language also has vowel sounds! When you say 'Ɛne' (today) or 'Akwaaba' (welcome), you are using vowel sounds — just like in English! 🇬🇭"
+      },
+      {
+        type: "science",
+        icon: "🔬",
+        iconClass: "icon-science",
+        title: "Science",
+        subtitle: "Our Body",
+        lesson: {
+          title: "📚 Let's Learn: Parts of the Body",
+          text: `Our body is amazing! It has many parts that help us do different things. <br><br>
+          👁️ <span class="highlight-word">Eyes</span> — help us SEE<br>
+          👂 <span class="highlight-word">Ears</span> — help us HEAR<br>
+          👃 <span class="highlight-word">Nose</span> — helps us SMELL<br>
+          👅 <span class="highlight-word">Tongue</span> — helps us TASTE<br>
+          ✋ <span class="highlight-word">Hands</span> — help us TOUCH and hold things`
+        },
+        quiz: [
+          { q: "Which part of the body do we use to SEE?", opts: ["Ears","Nose","Eyes","Hands"], ans: 2 },
+          { q: "We use our NOSE to do what?", opts: ["Hear","See","Smell","Taste"], ans: 2 },
+          { q: "How many ears do we have?", opts: ["1","4","3","2"], ans: 3 },
+          { q: "Which body part helps us TASTE food?", opts: ["Eye","Tongue","Ear","Nose"], ans: 1 }
+        ],
+        funFact: "Your nose can smell over 1 TRILLION different smells! 🫁 And your skin — which covers your whole body — is actually your LARGEST organ. It protects you every day! 🌟"
+      },
+      {
+        type: "creative",
+        icon: "🎨",
+        iconClass: "icon-creative",
+        title: "Creative Arts",
+        subtitle: "Colours of the Rainbow",
+        lesson: {
+          title: "📚 Let's Learn: The 7 Rainbow Colours",
+          text: `A rainbow appears after it rains when sunlight passes through water drops. It has <span class="highlight-word">7 beautiful colours</span>! To remember them, we use the name <strong>ROY G BIV</strong>:<br><br>
+          🔴 <strong>R</strong>ed &nbsp; 🟠 <strong>O</strong>range &nbsp; 🟡 <strong>Y</strong>ellow &nbsp; 🟢 <strong>G</strong>reen &nbsp; 🔵 <strong>B</strong>lue &nbsp; 🟣 <strong>I</strong>ndigo &nbsp; 🟤 <strong>V</strong>iolet`
+        },
+        quiz: [
+          { q: "What are the FIRST 3 colours of the rainbow?", opts: ["Blue,Green,Red","Red,Orange,Yellow","Pink,White,Blue","Green,Yellow,Pink"], ans: 1 },
+          { q: "How many colours are in a rainbow?", opts: ["5","8","6","7"], ans: 3 },
+          { q: "What does 'G' stand for in ROY G BIV?", opts: ["Grey","Gold","Green","Great"], ans: 2 },
+          { q: "When do we usually see a rainbow?", opts: ["At night","Before rain","After rain","In summer"], ans: 2 }
+        ],
+        funFact: "Did you know that Ghana's flag has RED, GOLD (yellow), and GREEN — three of the rainbow colours! The Black Star in the middle stands for African freedom. 🇬🇭 How beautiful!"
+      },
+      {
+        type: "gk",
+        icon: "🌍",
+        iconClass: "icon-gk",
+        title: "General Knowledge",
+        subtitle: "Ghana & The World",
+        lesson: {
+          title: "📚 Let's Learn: Our Country Ghana 🇬🇭",
+          text: `We live in a wonderful country called <span class="highlight-word">Ghana</span>! Here are important things to know:<br><br>
+          🏙️ The capital city is <span class="highlight-word">Accra</span><br>
+          🌊 Ghana is near the <span class="highlight-word">Atlantic Ocean</span><br>
+          🎵 The national anthem starts with <span class="highlight-word">"God bless our homeland Ghana"</span><br>
+          🌟 Ghana was the first African country to get independence (1957)<br>
+          👑 Our first president was <span class="highlight-word">Dr. Kwame Nkrumah</span>`
+        },
+        quiz: [
+          { q: "What is the capital city of Ghana?", opts: ["Kumasi","Takoradi","Accra","Tamale"], ans: 2 },
+          { q: "What colour is the star on Ghana's flag?", opts: ["Gold","White","Red","Black"], ans: 3 },
+          { q: "Who was Ghana's first president?", opts: ["Kufuor","Rawlings","Nkrumah","Mahama"], ans: 2 },
+          { q: "In which year did Ghana gain independence?", opts: ["1960","1947","1957","1965"], ans: 2 }
+        ],
+        funFact: "Ghana is nicknamed 'The Gateway to Africa' and is famous for its gold, cocoa (chocolate comes from cocoa! 🍫), and very warm and friendly people! Ghana hospitality is world-famous. 🤝"
+      }
+    ]
+  },
+  {
+    day: 2,
+    title: "Day 2",
+    subjects: [
+      {
+        type: "math",
+        icon: "➕",
+        iconClass: "icon-math",
+        title: "Mathematics",
+        subtitle: "Simple Addition",
+        lesson: {
+          title: "📚 Let's Learn: Adding Numbers",
+          text: `Adding means putting numbers <span class="highlight-word">together</span> to get a bigger number! We use the <span class="highlight-word">+ sign</span> for addition.<br><br>
+          🍎 + 🍎 = 2 apples<br>
+          2 + 3 = <strong>5</strong> (two things plus three things gives us FIVE things!)<br>
+          1 + 1 = <strong>2</strong><br><br>
+          Think of it like this: if you have <strong>3 biscuits</strong> 🍪🍪🍪 and mummy gives you <strong>2 more</strong> 🍪🍪, now you have <strong>5 biscuits</strong>! 🎉`
+        },
+        quiz: [
+          { q: "2 + 2 = ?", opts: ["3","5","4","6"], ans: 2 },
+          { q: "1 + 3 = ?", opts: ["2","4","5","3"], ans: 1 },
+          { q: "4 + 1 = ?", opts: ["6","4","5","3"], ans: 2 },
+          { q: "3 + 3 = ?", opts: ["5","7","4","6"], ans: 3 }
+        ],
+        funFact: "The + (plus) sign was first used in Europe around 500 years ago by a mathematician named Johannes Widmann. Before that, people just wrote the word 'plus' or 'and'! ✍️"
+      },
+      {
+        type: "english",
+        icon: "📖",
+        iconClass: "icon-english",
+        title: "English Language",
+        subtitle: "Simple Words",
+        lesson: {
+          title: "📚 Let's Learn: 3-Letter Words (CVC Words)",
+          text: `Some of the easiest words to read are made of just <span class="highlight-word">3 letters</span>: a Consonant, a Vowel, and a Consonant (C-V-C)!<br><br>
+          🐱 <strong>C-A-T</strong> = Cat<br>
+          🐶 <strong>D-O-G</strong> = Dog<br>
+          🔴 <strong>R-E-D</strong> = Red<br>
+          ☀️ <strong>S-U-N</strong> = Sun<br>
+          🦒 <strong>B-I-G</strong> = Big<br><br>
+          When you see a 3-letter word, sound out each letter and put them together! <span class="highlight-word">C...A...T = CAT!</span> 🌟`
+        },
+        quiz: [
+          { q: "Sound it out: B-E-D. What is the word?", opts: ["Bad","Bid","Bud","Bed"], ans: 3 },
+          { q: "Which word has 3 letters?", opts: ["Elephant","Cat","School","Pencil"], ans: 1 },
+          { q: "What animal is C-O-W?", opts: ["Cat","Crow","Cow","Crab"], ans: 2 },
+          { q: "Which word rhymes with CAT?", opts: ["Cup","Hat","Bus","Big"], ans: 1 }
+        ],
+        funFact: "The word 'OK' might be one of the most understood words in the WHOLE world! Almost every country knows what 'OK' means. Reading small words first helps you read BIG words later! 📚"
+      },
+      {
+        type: "science",
+        icon: "🌱",
+        iconClass: "icon-science",
+        title: "Science",
+        subtitle: "Plants Around Us",
+        lesson: {
+          title: "📚 Let's Learn: Parts of a Plant",
+          text: `Plants are living things — just like us! They grow, breathe, and need food. A plant has important parts:<br><br>
+          🌿 <span class="highlight-word">Roots</span> — hold the plant in the ground and drink water<br>
+          🌱 <span class="highlight-word">Stem</span> — carries water from roots to leaves (like a straw!)<br>
+          🍃 <span class="highlight-word">Leaves</span> — make food using sunlight (like a solar panel!)<br>
+          🌸 <span class="highlight-word">Flower</span> — makes seeds so new plants can grow<br>
+          🍎 <span class="highlight-word">Fruit</span> — protects the seeds`
+        },
+        quiz: [
+          { q: "Which part of the plant takes in water from the soil?", opts: ["Flower","Leaves","Roots","Stem"], ans: 2 },
+          { q: "What do LEAVES use to make food?", opts: ["Wind","Sunlight","Rain","Soil"], ans: 1 },
+          { q: "Which part of the plant carries water up like a straw?", opts: ["Root","Flower","Fruit","Stem"], ans: 3 },
+          { q: "Which plant part holds the seeds?", opts: ["Stem","Roots","Fruit","Leaves"], ans: 2 }
+        ],
+        funFact: "The biggest plant in the world by WIDTH is a giant mushroom in Oregon, USA — it covers 2,385 acres underground! 🍄 And trees communicate with each other through their roots using chemicals. They are basically having underground conversations! 🌳"
+      },
+      {
+        type: "creative",
+        icon: "🎵",
+        iconClass: "icon-creative",
+        title: "Music & Rhymes",
+        subtitle: "Nursery Rhymes",
+        lesson: {
+          title: "📚 Let's Learn: What Makes a Rhyme?",
+          text: `Rhyming words sound the same at the END! They are fun to say and easy to remember.<br><br>
+          🌙 <strong>Moon – Spoon – Soon</strong> (all end in 'oon' sound!)<br>
+          🐱 <strong>Cat – Bat – Hat – Mat – Sat</strong><br>
+          ☀️ <strong>Day – Play – Say – Way – Stay</strong><br><br>
+          Try this rhyme: <em>"Rain, rain, go away. Come again another <span class="highlight-word">day</span>. Little children want to <span class="highlight-word">play</span>!"</em><br><br>
+          'Day' and 'play' rhyme because they both end with the same sound — <strong>AY!</strong>`
+        },
+        quiz: [
+          { q: "Which word rhymes with 'CAKE'?", opts: ["Cup","Take","Ball","Door"], ans: 1 },
+          { q: "Which word rhymes with 'MOON'?", opts: ["Man","Cup","Spoon","Sky"], ans: 2 },
+          { q: "Complete the rhyme: 'Jack and Jill went up the ___'", opts: ["Street","Hill","Road","Tree"], ans: 1 },
+          { q: "Which two words rhyme?", opts: ["Dog–Cat","Sun–Fun","Tree–Car","Fish–Bird"], ans: 1 }
+        ],
+        funFact: "Singing and rhyming actually helps your BRAIN learn faster! That's why songs are so easy to remember. Even scientists use rhymes to memorise difficult things! 🎵🧠"
+      },
+      {
+        type: "gk",
+        icon: "🌍",
+        iconClass: "icon-gk",
+        title: "General Knowledge",
+        subtitle: "Animals of Africa",
+        lesson: {
+          title: "📚 Let's Learn: African Animals 🦁",
+          text: `Africa is home to some of the most amazing animals in the world! Ghana has many of them too!<br><br>
+          🦁 <span class="highlight-word">Lion</span> — called the King of the Jungle<br>
+          🐘 <span class="highlight-word">Elephant</span> — the largest land animal on Earth<br>
+          🦒 <span class="highlight-word">Giraffe</span> — the tallest animal with its long neck<br>
+          🦓 <span class="highlight-word">Zebra</span> — has black and white stripes like a barcode!<br>
+          🐊 <span class="highlight-word">Crocodile</span> — found in our rivers in Ghana<br>
+          🦅 <span class="highlight-word">Eagle</span> — Ghana's national bird symbol`
+        },
+        quiz: [
+          { q: "Which is the LARGEST land animal?", opts: ["Lion","Elephant","Giraffe","Zebra"], ans: 1 },
+          { q: "Which animal has black and white stripes?", opts: ["Giraffe","Elephant","Zebra","Lion"], ans: 2 },
+          { q: "Which animal has the LONGEST neck?", opts: ["Camel","Giraffe","Elephant","Crocodile"], ans: 1 },
+          { q: "What is the lion often called?", opts: ["King of the Sea","King of the Jungle","King of the Sky","King of the Farm"], ans: 1 }
+        ],
+        funFact: "An elephant's trunk has about 40,000 muscles in it — compare that to our ENTIRE body which has only 639 muscles! 🐘 The elephant can use its trunk to drink, pick up tiny objects, and even hug other elephants! ❤️"
+      }
+    ]
+  },
+  {
+    day: 3,
+    title: "Day 3",
+    subjects: [
+      {
+        type: "math",
+        icon: "➖",
+        iconClass: "icon-math",
+        title: "Mathematics",
+        subtitle: "Simple Subtraction",
+        lesson: {
+          title: "📚 Let's Learn: Taking Away (Subtraction)",
+          text: `Subtraction means <span class="highlight-word">taking away</span> from a number to get a smaller number! We use the <span class="highlight-word">– sign</span>.<br><br>
+          🍪🍪🍪🍪🍪 = 5 biscuits<br>
+          You eat 2: 5 – 2 = <strong>3 biscuits left</strong>! 🍪🍪🍪<br><br>
+          More examples:<br>
+          4 – 1 = <strong>3</strong><br>
+          6 – 2 = <strong>4</strong><br>
+          5 – 5 = <strong>0</strong> (nothing left!)<br><br>
+          Always start with the BIGGER number and take away the smaller one! 💡`
+        },
+        quiz: [
+          { q: "5 – 2 = ?", opts: ["2","4","3","1"], ans: 2 },
+          { q: "4 – 4 = ?", opts: ["1","4","2","0"], ans: 3 },
+          { q: "6 – 3 = ?", opts: ["2","3","4","1"], ans: 1 },
+          { q: "10 – 5 = ?", opts: ["4","6","3","5"], ans: 3 }
+        ],
+        funFact: "The minus sign (−) was first printed in a book in 1489 by a German mathematician. Subtraction is actually the opposite of addition — they undo each other! Cool right? 🤓"
+      },
+      {
+        type: "english",
+        icon: "📖",
+        iconClass: "icon-english",
+        title: "English Language",
+        subtitle: "Nouns — Naming Words",
+        lesson: {
+          title: "📚 Let's Learn: What is a Noun?",
+          text: `A <span class="highlight-word">Noun</span> is a <strong>naming word</strong>. It is the name of a person, place, animal, or thing!<br><br>
+          👦 <strong>Person</strong>: boy, girl, teacher, mother, doctor<br>
+          🏫 <strong>Place</strong>: school, market, church, Accra, Ghana<br>
+          🐶 <strong>Animal</strong>: dog, cat, lion, fish, bird<br>
+          📚 <strong>Thing</strong>: book, chair, pen, ball, mango<br><br>
+          In the sentence <em>"The <span class="highlight-word">boy</span> kicked the <span class="highlight-word">ball</span>"</em> — BOY and BALL are nouns because they name a person and a thing!`
+        },
+        quiz: [
+          { q: "Which word is a NOUN (naming word)?", opts: ["Run","Happy","Book","Quickly"], ans: 2 },
+          { q: "Which is a PLACE noun?", opts: ["Teacher","Dog","School","Chair"], ans: 2 },
+          { q: "In 'The cat sat on the mat' — which is a noun?", opts: ["Sat","On","Cat","The"], ans: 2 },
+          { q: "Which is a PERSON noun?", opts: ["Mango","Doctor","House","River"], ans: 1 }
+        ],
+        funFact: "There are more words in the English language than any other language — over 1 MILLION words! But most people only use about 3,000 words in everyday conversations. You're already learning the most important ones! 📚"
+      },
+      {
+        type: "science",
+        icon: "💧",
+        iconClass: "icon-science",
+        title: "Science",
+        subtitle: "Water & Weather",
+        lesson: {
+          title: "📚 Let's Learn: Water & The Water Cycle",
+          text: `Water is one of the most important things on Earth! We drink it, cook with it, and bathe with it. Water travels in a cycle:<br><br>
+          ☀️ The sun <span class="highlight-word">heats</span> water in rivers and the sea<br>
+          💨 Water turns to <span class="highlight-word">vapour</span> (steam) and goes UP into the sky<br>
+          ☁️ It forms <span class="highlight-word">clouds</span> in the sky<br>
+          🌧️ When clouds get heavy, water falls as <span class="highlight-word">rain</span><br>
+          🌊 Rain fills rivers and the sea again... and the cycle continues!<br><br>
+          This is called the <span class="highlight-word">Water Cycle</span>! 🌎`
+        },
+        quiz: [
+          { q: "What do clouds become when they get heavy?", opts: ["Snow","Rain","Wind","Fire"], ans: 1 },
+          { q: "What does the sun do to water to start the water cycle?", opts: ["Freezes it","Heats it","Colours it","Stops it"], ans: 1 },
+          { q: "Where does the water go after the sun heats it?", opts: ["Underground","Into food","Up into the sky","Into rivers"], ans: 2 },
+          { q: "What is formed when water vapour cools in the sky?", opts: ["Rain","Clouds","Wind","Ice"], ans: 1 }
+        ],
+        funFact: "The water you drink today might have been drunk by a DINOSAUR millions of years ago! 🦕 Water keeps going around and around in the water cycle and never disappears — it just changes form. Amazing! 💧"
+      },
+      {
+        type: "creative",
+        icon: "✏️",
+        iconClass: "icon-creative",
+        title: "Drawing & Creativity",
+        subtitle: "Shapes in Art",
+        lesson: {
+          title: "📚 Let's Learn: Basic Shapes",
+          text: `Shapes are the building blocks of ALL drawings! Every picture you see is made of shapes.<br><br>
+          🔴 <span class="highlight-word">Circle</span> — round with no corners (sun, ball, eye)<br>
+          🟦 <span class="highlight-word">Square</span> — 4 equal sides (window, tile)<br>
+          📐 <span class="highlight-word">Triangle</span> — 3 sides (roof, mountain)<br>
+          📄 <span class="highlight-word">Rectangle</span> — 4 sides, 2 long 2 short (door, book)<br>
+          ⭐ <span class="highlight-word">Star</span> — 5 or 6 points (stars in the sky!)<br><br>
+          A <strong>house</strong> drawing uses a rectangle (walls) + triangle (roof) + square (window). Shapes are everywhere! 🏠`
+        },
+        quiz: [
+          { q: "How many sides does a TRIANGLE have?", opts: ["4","2","5","3"], ans: 3 },
+          { q: "Which shape has NO corners?", opts: ["Square","Triangle","Circle","Rectangle"], ans: 2 },
+          { q: "What shape is a full moon?", opts: ["Square","Triangle","Rectangle","Circle"], ans: 3 },
+          { q: "A square has how many EQUAL sides?", opts: ["3","2","5","4"], ans: 3 }
+        ],
+        funFact: "The triangle is the STRONGEST shape in nature and building! That's why bridges and rooftops use triangles. Engineers love triangles because they don't bend under pressure! 🏗️"
+      },
+      {
+        type: "gk",
+        icon: "🌍",
+        iconClass: "icon-gk",
+        title: "General Knowledge",
+        subtitle: "Food & Health",
+        lesson: {
+          title: "📚 Let's Learn: Healthy Food Groups",
+          text: `To grow big and strong, our body needs different types of food! We call them <span class="highlight-word">food groups</span>:<br><br>
+          🍚 <span class="highlight-word">Carbohydrates</span> — give us energy (rice, bread, yam, banku, fufu)<br>
+          🥩 <span class="highlight-word">Proteins</span> — build our muscles (fish, meat, eggs, beans)<br>
+          🥦 <span class="highlight-word">Vegetables</span> — keep us healthy (kontomire, tomatoes, garden eggs)<br>
+          🍊 <span class="highlight-word">Fruits</span> — give vitamins (mangoes, oranges, bananas, pineapple)<br>
+          💧 <span class="highlight-word">Water</span> — keeps our body running smoothly!`
+        },
+        quiz: [
+          { q: "Which food group gives us the most ENERGY?", opts: ["Fruits","Water","Proteins","Carbohydrates"], ans: 3 },
+          { q: "Eggs and fish belong to which food group?", opts: ["Fruits","Carbohydrates","Proteins","Vegetables"], ans: 2 },
+          { q: "Which of these is a FRUIT?", opts: ["Rice","Beans","Mango","Fish"], ans: 2 },
+          { q: "Why is drinking water important?", opts: ["It makes food sweet","It keeps our body running","It makes us tall","It gives us energy"], ans: 1 }
+        ],
+        funFact: "Bananas 🍌 are one of Ghana's most popular fruits AND they are a natural energy booster! Many athletes eat bananas before exercising because they give quick energy. In Ghana, we have some of the sweetest bananas in the world! 🇬🇭"
+      }
+    ]
+  },
+  {
+    day: 4,
+    title: "Day 4",
+    subjects: [
+      {
+        type: "math",
+        icon: "🔢",
+        iconClass: "icon-math",
+        title: "Mathematics",
+        subtitle: "Shapes & Patterns",
+        lesson: {
+          title: "📚 Let's Learn: Patterns in Maths",
+          text: `A <span class="highlight-word">pattern</span> is something that repeats in an order! Patterns are everywhere in maths and real life.<br><br>
+          🔴🔵🔴🔵🔴🔵 — Red, Blue, Red, Blue! What comes next?<br>
+          1, 2, 3, 4, 5, <strong>6</strong> — numbers going up by 1!<br>
+          2, 4, 6, 8, <strong>10</strong> — counting by 2s (even numbers!)<br><br>
+          Patterns help us <span class="highlight-word">predict</span> (guess) what comes next. Even Ghana's kente cloth uses patterns! 🎨`
+        },
+        quiz: [
+          { q: "What comes next? 1, 2, 3, 4, ___", opts: ["6","7","5","8"], ans: 2 },
+          { q: "What comes next? 2, 4, 6, ___", opts: ["7","9","10","8"], ans: 3 },
+          { q: "What comes next? 🔴🔵🔴🔵___", opts: ["🔴🔵","🟢","🔵","🔴"], ans: 3 },
+          { q: "Which numbers are EVEN (counting by 2s)?", opts: ["1,3,5","2,4,6","1,2,3","3,5,7"], ans: 1 }
+        ],
+        funFact: "Patterns appear everywhere in nature! 🌻 A sunflower has seeds arranged in a mathematical pattern called the Fibonacci sequence. Even snail shells and pineapples follow this same magical pattern! 🍍"
+      },
+      {
+        type: "english",
+        icon: "📖",
+        iconClass: "icon-english",
+        title: "English Language",
+        subtitle: "Action Words — Verbs",
+        lesson: {
+          title: "📚 Let's Learn: Verbs (Doing Words)",
+          text: `A <span class="highlight-word">Verb</span> is an <strong>action word</strong> — it tells us what someone or something is DOING!<br><br>
+          🏃 <strong>Run</strong> — the boy runs<br>
+          😴 <strong>Sleep</strong> — the baby sleeps<br>
+          🍽️ <strong>Eat</strong> — we eat food<br>
+          📖 <strong>Read</strong> — she reads a book<br>
+          🎵 <strong>Sing</strong> — they sing a song<br>
+          🏊 <strong>Swim</strong> — fish swim in water<br><br>
+          Clue: If you can put the word after 'I can ___', it's probably a verb! <em>I can <span class="highlight-word">jump</span>!</em> 🦘`
+        },
+        quiz: [
+          { q: "Which word is a VERB (doing word)?", opts: ["Dog","Happy","Jump","House"], ans: 2 },
+          { q: "In 'The bird FLIES in the sky' — what is the verb?", opts: ["Bird","Sky","The","Flies"], ans: 3 },
+          { q: "Which of these is NOT a verb?", opts: ["Swim","Dance","Tree","Run"], ans: 2 },
+          { q: "What verb goes here: 'Fish ___ in water'", opts: ["Sleep","Fly","Swim","Walk"], ans: 2 }
+        ],
+        funFact: "The verb 'to be' (am, is, are, was, were) is probably the most used verb in English! You use it every day without noticing. Right now you ARE reading this — 'are' is a verb! 🤓"
+      },
+      {
+        type: "science",
+        icon: "☀️",
+        iconClass: "icon-science",
+        title: "Science",
+        subtitle: "The Solar System",
+        lesson: {
+          title: "📚 Let's Learn: Our Solar System 🪐",
+          text: `We live on a planet called <span class="highlight-word">Earth</span> 🌍. Earth is part of our <span class="highlight-word">Solar System</span> — a family of 8 planets that all go around the <span class="highlight-word">Sun</span>! ☀️<br><br>
+          The 8 planets in order:<br>
+          🪐 Mercury, Venus, <strong>Earth</strong>, Mars, Jupiter, Saturn, Uranus, Neptune<br><br>
+          <span class="highlight-word">Earth</span> is the 3rd planet. It is special because it has <strong>water</strong> and <strong>air</strong>, which means life can exist here! 🌱<br><br>
+          The Sun is a <span class="highlight-word">star</span> — a giant ball of hot, glowing gas that gives us light and warmth! 🌟`
+        },
+        quiz: [
+          { q: "What number planet is Earth from the Sun?", opts: ["1st","4th","2nd","3rd"], ans: 3 },
+          { q: "What is the Sun?", opts: ["A planet","A moon","A star","A cloud"], ans: 2 },
+          { q: "How many planets are in our Solar System?", opts: ["6","10","8","9"], ans: 2 },
+          { q: "What makes Earth special for life?", opts: ["It is biggest","It has water & air","It is closest to Sun","It has rings"], ans: 1 }
+        ],
+        funFact: "If Earth were the size of a marble, the Sun would be as big as a basketball! 🏀 And our entire Solar System is just one tiny part of a galaxy called the Milky Way, which has over 200 BILLION stars! 🌌"
+      },
+      {
+        type: "creative",
+        icon: "🎭",
+        iconClass: "icon-creative",
+        title: "Performing Arts",
+        subtitle: "Storytelling",
+        lesson: {
+          title: "📚 Let's Learn: How to Tell a Good Story",
+          text: `Every good story has 3 main parts — like a sandwich! 🥪<br><br>
+          🟢 <span class="highlight-word">Beginning</span> — Who? Where? When?<br>
+          <em>"Once upon a time, a young girl named Akua lived in a village near a forest..."</em><br><br>
+          🟡 <span class="highlight-word">Middle</span> — What happened? The problem!<br>
+          <em>"One day, Akua got lost in the forest..."</em><br><br>
+          🔴 <span class="highlight-word">End</span> — How did it finish?<br>
+          <em>"...and she found her way home by following the stars! 🌟"</em><br><br>
+          Every Ghanaian story starts: <strong>"Anansi! Anansi!"</strong> — talking about the wise spider! 🕷️`
+        },
+        quiz: [
+          { q: "A story has how many main parts?", opts: ["5","2","4","3"], ans: 3 },
+          { q: "The BEGINNING of a story tells us...", opts: ["How it ends","What the problem is","Who and where","Nothing important"], ans: 2 },
+          { q: "Which famous Ghanaian storytelling character is a spider?", opts: ["Kofi","Anansi","Akua","Kweku"], ans: 1 },
+          { q: "What does the MIDDLE of a story usually have?", opts: ["The ending","A problem or adventure","The characters' names","Where they live"], ans: 1 }
+        ],
+        funFact: "Anansi the Spider is one of the most famous characters in West African folklore! Anansi stories came to the Caribbean and America when Ghanaians were taken there hundreds of years ago — showing how powerful storytelling is. Stories travel with people! 📖🌍"
+      },
+      {
+        type: "gk",
+        icon: "🧠",
+        iconClass: "icon-gk",
+        title: "General Knowledge",
+        subtitle: "Community & People",
+        lesson: {
+          title: "📚 Let's Learn: Community Helpers 🏘️",
+          text: `A <span class="highlight-word">community</span> is a group of people who live and work together. Different people do different important jobs to help everyone!<br><br>
+          👮 <span class="highlight-word">Police Officer</span> — keeps us safe<br>
+          👩‍⚕️ <span class="highlight-word">Doctor/Nurse</span> — helps us when we are sick<br>
+          👨‍🏫 <span class="highlight-word">Teacher</span> — helps us learn<br>
+          👨‍🚒 <span class="highlight-word">Firefighter</span> — puts out fires<br>
+          👨‍🌾 <span class="highlight-word">Farmer</span> — grows our food<br>
+          🛒 <span class="highlight-word">Market Seller</span> — sells us food and goods`
+        },
+        quiz: [
+          { q: "Who helps us when we are SICK?", opts: ["Teacher","Farmer","Police","Doctor"], ans: 3 },
+          { q: "Who grows the FOOD we eat?", opts: ["Teacher","Nurse","Farmer","Police"], ans: 2 },
+          { q: "What does a police officer do?", opts: ["Cook food","Teach us","Keep us safe","Sell items"], ans: 2 },
+          { q: "Who helps us LEARN at school?", opts: ["Teacher","Doctor","Farmer","Firefighter"], ans: 0 }
+        ],
+        funFact: "In Ghana, market women (traders) play a HUGE role in the economy! The Makola Market in Accra is one of the most famous markets in West Africa. These hardworking women have been feeding and supplying Ghana for centuries! 🛒🇬🇭"
+      }
+    ]
+  },
+  {
+    day: 5,
+    title: "Day 5",
+    subjects: [
+      {
+        type: "math",
+        icon: "🔢",
+        iconClass: "icon-math",
+        title: "Mathematics",
+        subtitle: "Telling Time",
+        lesson: {
+          title: "📚 Let's Learn: Telling Time ⏰",
+          text: `A clock helps us know what <span class="highlight-word">time</span> it is! A clock has two hands:<br><br>
+          ⚡ <span class="highlight-word">Short hand</span> — points to the HOUR (how many hours)<br>
+          ⚡ <span class="highlight-word">Long hand</span> — points to the MINUTES<br><br>
+          When the long hand points straight UP (at 12), it means exactly on the hour!<br><br>
+          🕕 Short hand at 6, long at 12 = <strong>6 o'clock</strong><br>
+          🕒 Short hand at 3, long at 12 = <strong>3 o'clock</strong><br><br>
+          We use <strong>AM</strong> for morning and <strong>PM</strong> for afternoon/evening! ☀️🌙`
+        },
+        quiz: [
+          { q: "When the long hand points UP at 12, it means what?", opts: ["Half past","Quarter to","Exactly on the hour","5 minutes"], ans: 2 },
+          { q: "What does the SHORT hand on a clock tell us?", opts: ["Minutes","Seconds","Hours","Days"], ans: 2 },
+          { q: "School morning time would be called...?", opts: ["PM","Night","Noon","AM"], ans: 3 },
+          { q: "If it is 7 o'clock, the short hand points to...?", opts: ["6","12","7","8"], ans: 2 }
+        ],
+        funFact: "Ancient Egyptians used sundials (sticks in the ground) to tell time 3,500 years ago! They watched the shadow move. Now we have digital clocks and even our phones tell the time — but the idea is the same! ☀️"
+      },
+      {
+        type: "english",
+        icon: "📖",
+        iconClass: "icon-english",
+        title: "English Language",
+        subtitle: "Sentences",
+        lesson: {
+          title: "📚 Let's Learn: What is a Sentence?",
+          text: `A <span class="highlight-word">sentence</span> is a group of words that makes COMPLETE sense. Every proper sentence:<br><br>
+          ✅ Starts with a <span class="highlight-word">CAPITAL LETTER</span><br>
+          ✅ Has a <span class="highlight-word">VERB</span> (doing word)<br>
+          ✅ Ends with a <span class="highlight-word">FULL STOP (.)</span> or <strong>? !</strong><br><br>
+          ✔️ <em>"<strong>T</strong>he dog runs fast."</em> — Good sentence! ✅<br>
+          ❌ <em>"the dog fast"</em> — Not a sentence (no capital, no verb, no full stop) ❌<br><br>
+          Questions end with <strong>?</strong> and exciting sentences end with <strong>!</strong>`
+        },
+        quiz: [
+          { q: "Which is a CORRECT sentence?", opts: ["the cat sleep","The cat sleeps.","cat the sleeps.","Sleeps cat the"], ans: 1 },
+          { q: "What does every sentence START with?", opts: ["A number","A small letter","A capital letter","A comma"], ans: 2 },
+          { q: "What punctuation ends a QUESTION?", opts: ["Full stop (.)","Exclamation (!)","Question mark (?)","Comma (,)"], ans: 2 },
+          { q: "Which MUST a sentence have?", opts: ["A number","A colour","A verb","3 words exactly"], ans: 2 }
+        ],
+        funFact: "The shortest complete sentence in English is: <strong>'Go!'</strong> — just one word! It has a subject (you - hidden) and a verb (go). Long or short, what matters is that the sentence makes sense! ✍️"
+      },
+      {
+        type: "science",
+        icon: "🔭",
+        iconClass: "icon-science",
+        title: "Science",
+        subtitle: "Animals — Wild & Domestic",
+        lesson: {
+          title: "📚 Let's Learn: Wild vs. Domestic Animals",
+          text: `Animals can be grouped by where they live and their relationship with humans!<br><br>
+          🏠 <span class="highlight-word">Domestic Animals</span> — live with humans, are tame and helpful:<br>
+          Dog 🐕 (guards us), Cat 🐱 (catches rats), Cow 🐄 (gives milk), Chicken 🐓 (gives eggs)<br><br>
+          🌿 <span class="highlight-word">Wild Animals</span> — live in nature, are NOT kept as pets:<br>
+          Lion 🦁, Elephant 🐘, Crocodile 🐊, Monkey 🐒, Snake 🐍<br><br>
+          Wild animals should stay in the wild — they are important for our <span class="highlight-word">ecosystem</span> (the balance of nature)! 🌍`
+        },
+        quiz: [
+          { q: "Which animal is DOMESTIC (lives with humans)?", opts: ["Lion","Elephant","Dog","Crocodile"], ans: 2 },
+          { q: "Which animal gives us MILK?", opts: ["Dog","Cat","Cow","Bird"], ans: 2 },
+          { q: "A lion is a WILD animal. Where does it live?", opts: ["In a house","In a farm","In nature","In the sea"], ans: 2 },
+          { q: "Chickens are domestic animals. What do they give us?", opts: ["Milk","Eggs","Wool","Honey"], ans: 1 }
+        ],
+        funFact: "Dogs were the FIRST animals to be domesticated (tamed) by humans — over 15,000 years ago! Scientists think they started as wolves who began following early humans for food. Over time, they became our best friends! 🐺➡️🐕❤️"
+      },
+      {
+        type: "creative",
+        icon: "🎨",
+        iconClass: "icon-creative",
+        title: "Creative Arts",
+        subtitle: "Ghanaian Culture",
+        lesson: {
+          title: "📚 Let's Learn: Kente Cloth & Our Heritage 🇬🇭",
+          text: `Ghana has a rich and beautiful culture! One of our most famous traditions is <span class="highlight-word">Kente cloth</span>!<br><br>
+          🎨 Kente is a <span class="highlight-word">woven fabric</span> made of colourful strips of cloth<br>
+          👑 It was originally made by the <span class="highlight-word">Ashanti people</span> of Ghana<br>
+          🌈 Each colour has a meaning:<br>
+          &nbsp;&nbsp;&nbsp;🟡 <strong>Gold</strong> = wealth and royalty<br>
+          &nbsp;&nbsp;&nbsp;🟢 <strong>Green</strong> = growth and renewal<br>
+          &nbsp;&nbsp;&nbsp;🔴 <strong>Red</strong> = passion and strength<br>
+          &nbsp;&nbsp;&nbsp;⚫ <strong>Black</strong> = maturity and age<br><br>
+          Kente is worn at special occasions and is now known WORLDWIDE! 🌍`
+        },
+        quiz: [
+          { q: "Which Ghanaian people originally made Kente cloth?", opts: ["Ga","Ewe","Fante","Ashanti"], ans: 3 },
+          { q: "What does GOLD colour in Kente mean?", opts: ["Peace","Sadness","Wealth and royalty","Growth"], ans: 2 },
+          { q: "Kente cloth is made by doing what?", opts: ["Painting","Weaving strips","Sewing","Printing"], ans: 1 },
+          { q: "When is Kente usually worn?", opts: ["Swimming","Sleeping","At special occasions","At the market"], ans: 2 }
+        ],
+        funFact: "Kente cloth is now worn by people all over the world as a symbol of African pride and heritage! American graduates wear Kente stoles at their university ceremonies to honour their African roots. Our Ghanaian culture is truly global! 🌍🎓"
+      },
+      {
+        type: "gk",
+        icon: "💡",
+        iconClass: "icon-gk",
+        title: "General Knowledge",
+        subtitle: "Technology Around Us",
+        lesson: {
+          title: "📚 Let's Learn: Technology in Daily Life 💻",
+          text: `<span class="highlight-word">Technology</span> means tools and machines that make our lives easier! We use technology every single day in Ghana and around the world!<br><br>
+          📱 <span class="highlight-word">Mobile Phone</span> — we talk, learn, and connect with it<br>
+          💡 <span class="highlight-word">Light Bulb</span> — gives us light at night<br>
+          📺 <span class="highlight-word">Television</span> — we watch news and shows<br>
+          🚗 <span class="highlight-word">Car / Trotro</span> — takes us from place to place<br>
+          💊 <span class="highlight-word">Medical machines</span> — help doctors save lives<br><br>
+          You are using technology RIGHT NOW to learn! 🖥️ Technology is a tool — how we use it matters!`
+        },
+        quiz: [
+          { q: "Which of these is a technology we use EVERY day?", opts: ["Rock","Tree","Mobile Phone","Sand"], ans: 2 },
+          { q: "What does a light bulb give us?", opts: ["Water","Food","Light","Sound"], ans: 2 },
+          { q: "The car was invented to help people do what?", opts: ["Cook food","Travel faster","See better","Hear better"], ans: 1 },
+          { q: "Technology is best described as...?", opts: ["Dangerous things","Old things only","Tools that make life easier","Things only adults use"], ans: 2 }
+        ],
+        funFact: "Ghana launched its first satellite into space in 2017! It was called GhanaSat-1 and it was built by Ghanaian engineering students! 🛰️🇬🇭 Technology is not just for foreign countries — Ghanaians are innovating too!"
+      }
+    ]
+  },
+
+  // ==================== DAY 6 ====================
+  {
+    day: 6,
+    title: "Day 6",
+    subjects: [
+      {
+        type: "math",
+        icon: "🔢",
+        iconClass: "icon-math",
+        title: "Mathematics",
+        subtitle: "Counting by 10s",
+        lesson: {
+          title: "📚 Let's Learn: Tens! 10, 20, 30...",
+          text: `We already know numbers 1–10. Now let's <span class="highlight-word">skip count by 10s</span>! Think of 10 fingers on your hands — that's ONE ten!<br><br>
+          ✋✋ = <strong>10</strong><br>
+          ✋✋ + ✋✋ = <strong>20</strong><br>
+          Three groups of ten = <strong>30</strong><br><br>
+          10 → 20 → 30 → 40 → 50 → 60 → 70 → 80 → 90 → <span class="highlight-word">100</span>!<br><br>
+          100 is a BIG number — it's like having 10 bags with 10 sweets in each! 🍬 Counting by 10s is a shortcut to counting big numbers fast!`
+        },
+        quiz: [
+          { q: "What comes after 20 when counting by 10s?", opts: ["22","30","25","21"], ans: 1 },
+          { q: "10 + 10 = ?", opts: ["11","15","20","12"], ans: 2 },
+          { q: "How many tens are in 50?", opts: ["3","6","4","5"], ans: 3 },
+          { q: "What comes BEFORE 100 when counting by 10s?", opts: ["99","95","90","80"], ans: 2 }
+        ],
+        funFact: "We use a number system based on 10 called the <strong>decimal system</strong> — 'deci' means ten in Latin! We probably use base-10 because humans have 10 fingers. Some ancient people used base-20 (counting fingers AND toes)! 🖐🦶"
+      },
+      {
+        type: "english",
+        icon: "📖",
+        iconClass: "icon-english",
+        title: "English Language",
+        subtitle: "Adjectives — Describing Words",
+        lesson: {
+          title: "📚 Let's Learn: Describing Words (Adjectives)",
+          text: `An <span class="highlight-word">adjective</span> is a word that <strong>describes</strong> a noun (a person, place, or thing). It tells us more about it — what it looks like, feels like, sounds like!<br><br>
+          🔴 <strong>Colour:</strong> the <span class="highlight-word">red</span> ball<br>
+          📏 <strong>Size:</strong> a <span class="highlight-word">big</span> elephant<br>
+          😊 <strong>Feeling:</strong> a <span class="highlight-word">happy</span> child<br>
+          ✨ <strong>Quality:</strong> a <span class="highlight-word">beautiful</span> flower<br><br>
+          Without adjectives: <em>"The dog sat."</em><br>
+          With adjectives: <em>"The <span class="highlight-word">big, fluffy, brown</span> dog sat."</em> — now we can picture it! 🐶`
+        },
+        quiz: [
+          { q: "Which word is an ADJECTIVE in: 'The tall girl ran'?", opts: ["The","Girl","Tall","Ran"], ans: 2 },
+          { q: "Which word DESCRIBES something?", opts: ["Jump","Run","Tiny","Eat"], ans: 2 },
+          { q: "Add an adjective: 'She ate a ___ mango'", opts: ["Quickly","Sweet","And","Mango"], ans: 1 },
+          { q: "Which sentence has an ADJECTIVE?", opts: ["Dogs run.","The cat sat.","A cold wind blew.","She jumped."], ans: 2 }
+        ],
+        funFact: "There are more adjectives in the English language than nouns or verbs! Poets love adjectives because they paint pictures with words. Shakespeare invented over 1,700 words — many were creative new adjectives! ✍️🎭"
+      },
+      {
+        type: "science",
+        icon: "🧲",
+        iconClass: "icon-science",
+        title: "Science",
+        subtitle: "Forces — Push & Pull",
+        lesson: {
+          title: "📚 Let's Learn: Push and Pull Forces",
+          text: `A <span class="highlight-word">force</span> is a push or pull that makes things move, stop, or change shape!<br><br>
+          👉 <span class="highlight-word">PUSH</span> — you move something AWAY from you<br>
+          &nbsp;&nbsp;&nbsp;Examples: pushing a door open, kicking a ball ⚽, pushing a chair<br><br>
+          👈 <span class="highlight-word">PULL</span> — you move something TOWARD you<br>
+          &nbsp;&nbsp;&nbsp;Examples: pulling open a drawer, pulling a rope, opening a zip<br><br>
+          🌍 <span class="highlight-word">Gravity</span> is a special PULL force — it pulls everything DOWN toward the ground. That's why when you throw a ball up, it comes back down! 🎯`
+        },
+        quiz: [
+          { q: "Kicking a football is an example of a...?", opts: ["Pull","Rest","Push","Stop"], ans: 2 },
+          { q: "Opening a drawer by pulling is called a...?", opts: ["Push","Gravity","Pull","Throw"], ans: 2 },
+          { q: "What force pulls things toward the ground?", opts: ["Wind","Magnetism","Gravity","Friction"], ans: 2 },
+          { q: "Which action is a PULL?", opts: ["Pushing a door","Kicking a ball","Blowing air","Pulling a rope"], ans: 3 }
+        ],
+        funFact: "Isaac Newton discovered gravity when — according to the famous story — an apple fell on his head! 🍎 He wondered why the apple always fell DOWN and never sideways or UP. That question led to one of the most important discoveries in science! 🧑‍🔬"
+      },
+      {
+        type: "creative",
+        icon: "🎨",
+        iconClass: "icon-creative",
+        title: "Creative Arts",
+        subtitle: "Primary & Secondary Colours",
+        lesson: {
+          title: "📚 Let's Learn: Mixing Colours! 🎨",
+          text: `There are <span class="highlight-word">3 Primary Colours</span> — they are special because you CANNOT make them by mixing other colours!<br><br>
+          🔴 <strong>Red</strong> &nbsp; 🔵 <strong>Blue</strong> &nbsp; 🟡 <strong>Yellow</strong><br><br>
+          But when you MIX primary colours, you get <span class="highlight-word">Secondary Colours</span>!<br><br>
+          🔴 Red + 🔵 Blue = <span class="highlight-word">🟣 Purple</span><br>
+          🔴 Red + 🟡 Yellow = <span class="highlight-word">🟠 Orange</span><br>
+          🔵 Blue + 🟡 Yellow = <span class="highlight-word">🟢 Green</span><br><br>
+          Artists mix these colours to make millions of shades! 🖌️`
+        },
+        quiz: [
+          { q: "Red + Yellow = ?", opts: ["Purple","Green","Orange","Brown"], ans: 2 },
+          { q: "Which are PRIMARY colours?", opts: ["Green,Orange,Purple","Red,Blue,Yellow","Pink,White,Black","Blue,Green,Yellow"], ans: 1 },
+          { q: "Blue + Yellow = ?", opts: ["Orange","Purple","Brown","Green"], ans: 3 },
+          { q: "Red + Blue = ?", opts: ["Orange","Green","Purple","Brown"], ans: 2 }
+        ],
+        funFact: "The human eye can see about 10 million different colours! 👁️ All of them are made from just 3 base colours of light: Red, Green, and Blue — which is why your TV screen and phone screen use RGB (Red-Green-Blue) light to show pictures! 📺"
+      },
+      {
+        type: "gk",
+        icon: "🌍",
+        iconClass: "icon-gk",
+        title: "General Knowledge",
+        subtitle: "Continents of the World",
+        lesson: {
+          title: "📚 Let's Learn: The 7 Continents 🌎",
+          text: `Our Earth has <span class="highlight-word">7 large areas of land</span> called <strong>continents</strong>! Ghana is on the continent of <span class="highlight-word">Africa</span>!<br><br>
+          🌍 <strong>Africa</strong> — our home! Ghana is here<br>
+          🌎 <strong>North America</strong> — USA, Canada, Mexico<br>
+          🌎 <strong>South America</strong> — Brazil, Argentina<br>
+          🌍 <strong>Europe</strong> — UK, France, Germany<br>
+          🌏 <strong>Asia</strong> — China, India, Japan (biggest continent!)<br>
+          🌏 <strong>Australia/Oceania</strong> — kangaroos live here! 🦘<br>
+          ❄️ <strong>Antarctica</strong> — the coldest place, only penguins! 🐧`
+        },
+        quiz: [
+          { q: "Ghana is located in which continent?", opts: ["Asia","Europe","South America","Africa"], ans: 3 },
+          { q: "How many continents are on Earth?", opts: ["5","8","6","7"], ans: 3 },
+          { q: "Which continent is the BIGGEST?", opts: ["Africa","Europe","Asia","Australia"], ans: 2 },
+          { q: "Which is the COLDEST continent?", opts: ["Africa","Asia","Europe","Antarctica"], ans: 3 }
+        ],
+        funFact: "Africa is the second largest continent AND has the most countries of any continent — 54 countries! 🌍 It also has the longest river in the world (the Nile 🏞️), the largest desert (the Sahara 🏜️), and some of the world's most diverse wildlife. Africa is truly amazing! 🦁🐘🦒"
+      }
+    ]
+  },
+
+  // ==================== DAY 7 ====================
+  {
+    day: 7,
+    title: "Day 7",
+    subjects: [
+      {
+        type: "math",
+        icon: "📐",
+        iconClass: "icon-math",
+        title: "Mathematics",
+        subtitle: "Measurement — Long & Short",
+        lesson: {
+          title: "📚 Let's Learn: Measuring Length",
+          text: `<span class="highlight-word">Measurement</span> means finding out how long, tall, or short something is! We can measure in different ways:<br><br>
+          📏 <span class="highlight-word">Ruler</span> — we measure in <strong>centimetres (cm)</strong> and <strong>metres (m)</strong><br>
+          ✋ <span class="highlight-word">Hand spans</span> — an old way to measure (how many hand widths fit?)<br>
+          👣 <span class="highlight-word">Footsteps</span> — count steps to measure distance!<br><br>
+          Key facts:<br>
+          100 cm = <span class="highlight-word">1 metre</span> (1m)<br>
+          A door is about <strong>2 metres</strong> tall<br>
+          A pencil is about <strong>15 centimetres</strong> long<br>
+          Your classroom ruler is usually <strong>30 cm</strong> long! 📏`
+        },
+        quiz: [
+          { q: "How many centimetres make 1 metre?", opts: ["10","50","1000","100"], ans: 3 },
+          { q: "Which is LONGER: 1 metre or 50 centimetres?", opts: ["50 centimetres","They are equal","1 metre","Can't tell"], ans: 2 },
+          { q: "We use a RULER to measure...?", opts: ["Weight","Temperature","Length","Time"], ans: 2 },
+          { q: "A standard classroom ruler is usually how long?", opts: ["10 cm","50 cm","30 cm","100 cm"], ans: 2 }
+        ],
+        funFact: "Ancient Egyptians used the 'cubit' to measure — it was the length from your elbow to your middle fingertip! 👐 The problem was everyone's arms are different lengths! That's why we invented standard measurements like cm and metres — so everyone measures the same way. 📏"
+      },
+      {
+        type: "english",
+        icon: "📖",
+        iconClass: "icon-english",
+        title: "English Language",
+        subtitle: "Opposites (Antonyms)",
+        lesson: {
+          title: "📚 Let's Learn: Opposites! ↔️",
+          text: `<span class="highlight-word">Opposites</span> (also called antonyms) are words that mean the COMPLETE opposite of each other!<br><br>
+          🔝 <strong>Big</strong> ↔ <strong>Small</strong><br>
+          ☀️ <strong>Hot</strong> ↔ <strong>Cold</strong><br>
+          ⬆️ <strong>Up</strong> ↔ <strong>Down</strong><br>
+          🌞 <strong>Day</strong> ↔ <strong>Night</strong><br>
+          😊 <strong>Happy</strong> ↔ <strong>Sad</strong><br>
+          🏃 <strong>Fast</strong> ↔ <strong>Slow</strong><br>
+          🆕 <strong>New</strong> ↔ <strong>Old</strong><br><br>
+          Knowing opposites <span class="highlight-word">doubles your vocabulary</span> — learn one word, and you've almost learned two! 🧠`
+        },
+        quiz: [
+          { q: "What is the opposite of HOT?", opts: ["Warm","Dry","Cold","Wet"], ans: 2 },
+          { q: "What is the opposite of BIG?", opts: ["Tall","Thin","Round","Small"], ans: 3 },
+          { q: "What is the opposite of DAY?", opts: ["Sun","Morning","Night","Evening"], ans: 2 },
+          { q: "What is the opposite of HAPPY?", opts: ["Tired","Scared","Bored","Sad"], ans: 3 }
+        ],
+        funFact: "In the Twi language, the word 'papa' (🇬🇭) means 'good' — and 'bɔne' means 'bad'. Every language in the world has words for opposites because understanding contrast — light vs dark, good vs bad — is how our brains make sense of the world! 🧠🌍"
+      },
+      {
+        type: "science",
+        icon: "🌡️",
+        iconClass: "icon-science",
+        title: "Science",
+        subtitle: "States of Matter",
+        lesson: {
+          title: "📚 Let's Learn: Solid, Liquid & Gas",
+          text: `Everything around us is made of <span class="highlight-word">matter</span>, and matter comes in 3 main forms:<br><br>
+          🪨 <span class="highlight-word">SOLID</span> — has a fixed shape, you can hold it<br>
+          &nbsp;&nbsp;&nbsp;Examples: stone, wood, ice, book, table<br><br>
+          💧 <span class="highlight-word">LIQUID</span> — flows, takes the shape of its container<br>
+          &nbsp;&nbsp;&nbsp;Examples: water, milk, juice, palm oil<br><br>
+          💨 <span class="highlight-word">GAS</span> — fills any space, usually invisible<br>
+          &nbsp;&nbsp;&nbsp;Examples: air, steam, the smell of food cooking<br><br>
+          💡 Amazing: Water can be all THREE! Ice (solid) → Water (liquid) → Steam (gas)! 🌊`
+        },
+        quiz: [
+          { q: "A rock is an example of a...?", opts: ["Gas","Liquid","Solid","Mixture"], ans: 2 },
+          { q: "Water is an example of a...?", opts: ["Solid","Gas","Liquid","None"], ans: 2 },
+          { q: "When ice melts, it becomes...?", opts: ["Gas","Smaller","Liquid","Solid"], ans: 2 },
+          { q: "The air we breathe is a...?", opts: ["Liquid","Solid","Gas","Rock"], ans: 2 }
+        ],
+        funFact: "There is actually a 4th state of matter called <strong>plasma</strong> — it's super-heated gas! ⚡ The Sun, lightning bolts, and neon signs are all made of plasma. It's the most common state of matter in the universe, but rare on Earth! 🌟"
+      },
+      {
+        type: "creative",
+        icon: "🎵",
+        iconClass: "icon-creative",
+        title: "Music",
+        subtitle: "Rhythm & Beat",
+        lesson: {
+          title: "📚 Let's Learn: Rhythm — The Heartbeat of Music 🥁",
+          text: `<span class="highlight-word">Rhythm</span> is the pattern of beats in music — like a heartbeat! 💓<br><br>
+          Your heartbeat goes: <em>boom-boom, boom-boom, boom-boom</em> — that's a rhythm!<br><br>
+          🥁 In Ghana, we have powerful drumming traditions:<br>
+          &nbsp;&nbsp;&nbsp;🎵 <span class="highlight-word">Fontomfrom</span> — royal Ashanti drums<br>
+          &nbsp;&nbsp;&nbsp;🎵 <span class="highlight-word">Kpanlogo</span> — Ga music and dance<br>
+          &nbsp;&nbsp;&nbsp;🎵 <span class="highlight-word">Borborbor</span> — Ewe dance music<br><br>
+          Try clapping this rhythm: <strong>CLAP-clap-clap, CLAP-clap-clap</strong> (loud-soft-soft). You are making music! 👏`
+        },
+        quiz: [
+          { q: "What is RHYTHM in music?", opts: ["The colour of sound","The pattern of beats","How loud music is","The words in a song"], ans: 1 },
+          { q: "Which Ghanaian drums are used by Ashanti royalty?", opts: ["Kpanlogo","Borborbor","Fontomfrom","Djembe"], ans: 2 },
+          { q: "Your HEARTBEAT is an example of...?", opts: ["A colour","Silence","A rhythm","A shape"], ans: 2 },
+          { q: "Which Ghanaian ethnic group plays Kpanlogo music?", opts: ["Ashanti","Ewe","Ga","Fante"], ans: 2 }
+        ],
+        funFact: "Talking drums (Atumpan drums in Ghana 🥁) were used to send messages between villages — like an early telephone! Skilled drummers could drum out messages that travelled miles through the forest. The drums literally 'spoke' in tonal patterns! 📡"
+      },
+      {
+        type: "gk",
+        icon: "💡",
+        iconClass: "icon-gk",
+        title: "General Knowledge",
+        subtitle: "The Human Senses",
+        lesson: {
+          title: "📚 Let's Learn: Our 5 Senses 🧠",
+          text: `Our body has <span class="highlight-word">5 senses</span> that help us understand the world around us!<br><br>
+          👀 <span class="highlight-word">Sight</span> — we SEE with our EYES<br>
+          👂 <span class="highlight-word">Hearing</span> — we HEAR with our EARS<br>
+          👃 <span class="highlight-word">Smell</span> — we SMELL with our NOSE<br>
+          👅 <span class="highlight-word">Taste</span> — we TASTE with our TONGUE<br>
+          ✋ <span class="highlight-word">Touch</span> — we FEEL with our SKIN<br><br>
+          Our brain receives all 5 senses at the same time and puts the information together to help us understand what's happening! 🧠 Isn't that incredible?`
+        },
+        quiz: [
+          { q: "How many senses does a human have?", opts: ["3","7","4","5"], ans: 3 },
+          { q: "We use our TONGUE to...?", opts: ["See","Taste","Smell","Hear"], ans: 1 },
+          { q: "Which sense uses the EARS?", opts: ["Sight","Touch","Smell","Hearing"], ans: 3 },
+          { q: "Our SKIN helps us to...?", opts: ["Taste","Smell","Touch","See"], ans: 2 }
+        ],
+        funFact: "Some people have a condition called synesthesia where their senses OVERLAP! They might 'see' music as colours or 'taste' certain words. About 4% of the world's population has some form of synesthesia. Imagine tasting the number 7! 🌈🎵"
+      }
+    ]
+  },
+
+  // ==================== DAY 8 ====================
+  {
+    day: 8,
+    title: "Day 8",
+    subjects: [
+      {
+        type: "math",
+        icon: "🔢",
+        iconClass: "icon-math",
+        title: "Mathematics",
+        subtitle: "More & Less / Comparing",
+        lesson: {
+          title: "📚 Let's Learn: Comparing Numbers",
+          text: `We can compare numbers to see which is bigger or smaller using special signs:<br><br>
+          &gt; means <span class="highlight-word">GREATER THAN</span> (the mouth eats the bigger number!)<br>
+          &lt; means <span class="highlight-word">LESS THAN</span><br>
+          = means <span class="highlight-word">EQUAL TO</span> (the same!)<br><br>
+          🐊 Think of it as a crocodile mouth: it always opens toward the <strong>bigger</strong> number because it wants to eat the most! 🐊<br><br>
+          5 <strong>&gt;</strong> 3 (5 is greater than 3)<br>
+          2 <strong>&lt;</strong> 7 (2 is less than 7)<br>
+          4 <strong>=</strong> 4 (4 is equal to 4)`
+        },
+        quiz: [
+          { q: "Which symbol means 'GREATER THAN'?", opts: ["=","<",">","≠"], ans: 2 },
+          { q: "5 ___ 3 (which symbol fits?)", opts: ["<","=","+",">"], ans: 3 },
+          { q: "Which number is GREATER: 8 or 3?", opts: ["3","They're equal","8","Can't tell"], ans: 2 },
+          { q: "2 ___ 7 (which symbol fits?)", opts: [">","=","<","+"], ans: 2 }
+        ],
+        funFact: "The greater than (>) and less than (<) symbols were invented by mathematician Thomas Harriot in 1631! Before that, mathematicians wrote long sentences like 'the first is greater than the second.' Symbols make maths SO much quicker! ✨"
+      },
+      {
+        type: "english",
+        icon: "📖",
+        iconClass: "icon-english",
+        title: "English Language",
+        subtitle: "Reading — Short Story",
+        lesson: {
+          title: "📚 Let's Read: Kofi and the Mango Tree 🥭",
+          text: `Read this short story carefully:<br><br>
+          <em>"<span class="highlight-word">Kofi</span> was a young boy who lived in a small village in Ghana. Near his house stood a tall mango tree. Every morning, Kofi would run to the tree and look up.<br><br>
+          One day, a ripe yellow mango fell from the tree. Kofi caught it and smiled. He ran home and shared the mango with his sister Adwoa and his mother.<br><br>
+          'Sharing is the sweetest fruit,' said his mother. Kofi thought about those words all day. 🌟"</em><br><br>
+          Think about: <span class="highlight-word">Who</span> is in the story? <span class="highlight-word">Where</span> do they live? What is the <span class="highlight-word">lesson</span>?`
+        },
+        quiz: [
+          { q: "What is the boy's name in the story?", opts: ["Kwame","Adwoa","Kofi","Kojo"], ans: 2 },
+          { q: "What fell from the mango tree?", opts: ["A bird","Kofi","A ripe mango","A branch"], ans: 2 },
+          { q: "Who did Kofi share the mango with?", opts: ["His friends","His teacher","His father","His sister and mother"], ans: 3 },
+          { q: "What lesson does the story teach?", opts: ["Run fast","Climb trees","Sharing is good","Mangoes are sweet"], ans: 2 }
+        ],
+        funFact: "Ghana has over 100 different mango varieties! 🥭 The mango tree is also significant in many Ghanaian communities — people gather under large trees to tell stories, settle disputes, and share meals. Trees are community meeting places! 🌳🇬🇭"
+      },
+      {
+        type: "science",
+        icon: "🌍",
+        iconClass: "icon-science",
+        title: "Science",
+        subtitle: "Day & Night",
+        lesson: {
+          title: "📚 Let's Learn: Why Do We Have Day and Night? 🌞🌙",
+          text: `Have you ever wondered why the sun appears in the morning and disappears at night? Here's the secret:<br><br>
+          🌍 The Earth is always <span class="highlight-word">spinning</span> (rotating) — like a spinning top!<br>
+          ☀️ The Sun stays in the same place<br>
+          🌞 The side of Earth <strong>facing the Sun</strong> = DAYTIME<br>
+          🌙 The side of Earth <strong>facing away</strong> = NIGHTTIME<br><br>
+          One full spin takes <span class="highlight-word">24 hours</span> — that's why we have <strong>24 hours in a day</strong>! The Earth never stops spinning — not for a single second! 🔄`
+        },
+        quiz: [
+          { q: "Why do we have day and night?", opts: ["The sun moves","The moon blocks sun","Earth spins","The stars cause it"], ans: 2 },
+          { q: "How long does Earth take to complete ONE full spin?", opts: ["12 hours","48 hours","7 days","24 hours"], ans: 3 },
+          { q: "Which side of Earth experiences DAYTIME?", opts: ["The dark side","The side facing away from Sun","The side facing the Sun","The north side"], ans: 2 },
+          { q: "When it is day in Ghana, it is ___ on the other side of Earth", opts: ["Also day","Morning","Night","Afternoon"], ans: 2 }
+        ],
+        funFact: "When it's daytime in Ghana, it's NIGHT TIME in China or Australia! 🌏 That's why when you call someone in the USA, they might be sleeping while you're awake. The Earth's spin means 24 different time zones exist around the world! 🌎🕐"
+      },
+      {
+        type: "creative",
+        icon: "✂️",
+        iconClass: "icon-creative",
+        title: "Creative Arts",
+        subtitle: "Craft — Making Things",
+        lesson: {
+          title: "📚 Let's Learn: The Art of Craft Making 🎎",
+          text: `<span class="highlight-word">Craft</span> is using your hands and simple materials to make beautiful, useful things! Crafts are part of every culture in the world.<br><br>
+          Ghana is famous for its crafts:<br>
+          🪵 <span class="highlight-word">Wood carving</span> — beautiful stools, masks, and figures<br>
+          🏺 <span class="highlight-word">Pottery</span> — making clay pots and bowls<br>
+          🧶 <span class="highlight-word">Weaving</span> — Kente cloth and baskets<br>
+          📿 <span class="highlight-word">Bead making</span> — Krobo beads are world famous!<br><br>
+          <strong>Today's Activity:</strong> With paper, draw your favourite animal and colour it using only 3 colours. Cut it out and make it stand! 🦁✂️`
+        },
+        quiz: [
+          { q: "Which Ghanaian craft involves making colourful beads?", opts: ["Kente weaving","Pottery","Krobo bead making","Wood carving"], ans: 2 },
+          { q: "What material is used in POTTERY craft?", opts: ["Wood","Cloth","Metal","Clay"], ans: 3 },
+          { q: "Kente cloth is made through which craft?", opts: ["Painting","Weaving","Carving","Knitting"], ans: 1 },
+          { q: "Which craft uses wood to make stools and masks?", opts: ["Pottery","Weaving","Wood carving","Beading"], ans: 2 }
+        ],
+        funFact: "The Ashanti Golden Stool (Sika 'dwa Kofi) 🪑 is the most sacred symbol in Asante culture — it was never meant to be sat upon! It represents the soul of the Ashanti nation. It is said to have descended from heaven into the hands of the first Asante king. This shows how crafted objects can hold deep meaning! 👑"
+      },
+      {
+        type: "gk",
+        icon: "🌍",
+        iconClass: "icon-gk",
+        title: "General Knowledge",
+        subtitle: "Transport & Travel",
+        lesson: {
+          title: "📚 Let's Learn: Ways We Travel 🚗✈️🚢",
+          text: `People move from place to place using <span class="highlight-word">transport</span>. There are 3 main types:<br><br>
+          🛣️ <span class="highlight-word">Land Transport</span> — moves on roads or rails<br>
+          &nbsp;&nbsp;&nbsp;Cars, trotros, buses, motorbikes, bicycles, trains 🚂<br><br>
+          🌊 <span class="highlight-word">Water Transport</span> — moves on water<br>
+          &nbsp;&nbsp;&nbsp;Boats, ferries, ships, canoes (we use these on Volta Lake! 🚣)<br><br>
+          ✈️ <span class="highlight-word">Air Transport</span> — flies through the air<br>
+          &nbsp;&nbsp;&nbsp;Aeroplanes, helicopters, drones<br><br>
+          Ghana's main airport is <span class="highlight-word">Kotoka International Airport</span> in Accra! ✈️🇬🇭`
+        },
+        quiz: [
+          { q: "A trotro is an example of which type of transport?", opts: ["Air","Water","Land","Space"], ans: 2 },
+          { q: "Which transport type uses aeroplanes?", opts: ["Land","Water","Rail","Air"], ans: 3 },
+          { q: "What is Ghana's main international airport called?", opts: ["Kumasi Airport","Accra Air Base","Kotoka International","Ghana Airways"], ans: 2 },
+          { q: "A canoe on Volta Lake is what type of transport?", opts: ["Air","Land","Water","Rail"], ans: 2 }
+        ],
+        funFact: "The first Wright Brothers flight in 1903 lasted only 12 SECONDS and covered 37 metres — shorter than the wingspan of a modern jet! ✈️ Today, aeroplanes can fly 900 km/h and travel from Ghana to the UK in just 6 hours. In 1900, that journey took WEEKS by ship! 🌊"
+      }
+    ]
+  },
+
+  // ==================== DAY 9 ====================
+  {
+    day: 9,
+    title: "Day 9",
+    subjects: [
+      {
+        type: "math",
+        icon: "➕",
+        iconClass: "icon-math",
+        title: "Mathematics",
+        subtitle: "Word Problems",
+        lesson: {
+          title: "📚 Let's Learn: Maths in Real Life! 🧮",
+          text: `<span class="highlight-word">Word problems</span> use maths to solve everyday situations. To solve them, we follow steps:<br><br>
+          📖 <strong>Step 1:</strong> Read carefully — what is the problem asking?<br>
+          🔍 <strong>Step 2:</strong> Find the numbers<br>
+          ➕ <strong>Step 3:</strong> Decide: do I ADD or SUBTRACT?<br>
+          ✏️ <strong>Step 4:</strong> Solve it!<br><br>
+          Example: <em>"Ama has <span class="highlight-word">5 oranges</span>. She buys <span class="highlight-word">3 more</span>. How many does she have?"</em><br>
+          → 5 + 3 = <strong>8 oranges!</strong> 🍊🍊🍊🍊🍊🍊🍊🍊<br><br>
+          Example 2: <em>"There are <span class="highlight-word">7 birds</span>. <span class="highlight-word">2 fly away</span>. How many left?"</em><br>
+          → 7 – 2 = <strong>5 birds!</strong> 🐦`
+        },
+        quiz: [
+          { q: "Kwame has 4 books. He gets 2 more. How many total?", opts: ["5","7","6","8"], ans: 2 },
+          { q: "There are 8 children. 3 go home. How many remain?", opts: ["6","5","4","3"], ans: 1 },
+          { q: "Abena buys 3 mangoes and 4 bananas. How many fruits total?", opts: ["6","8","7","9"], ans: 2 },
+          { q: "A bag has 10 sweets. Kofi eats 4. How many are left?", opts: ["5","7","4","6"], ans: 3 }
+        ],
+        funFact: "Did you know that market sellers in Ghana do complex maths calculations in their heads every single day — calculating change, measuring quantities, and pricing goods? All without a calculator! 🛒 Maths is alive in our everyday markets! 🇬🇭"
+      },
+      {
+        type: "english",
+        icon: "📖",
+        iconClass: "icon-english",
+        title: "English Language",
+        subtitle: "Plurals — One & Many",
+        lesson: {
+          title: "📚 Let's Learn: Plural Words (More Than One!)",
+          text: `A <span class="highlight-word">plural</span> means MORE THAN ONE of something. In English, we usually just add <strong>-s</strong> or <strong>-es</strong>!<br><br>
+          1 <strong>cat</strong> → 2 <strong>cats</strong> (add S)<br>
+          1 <strong>book</strong> → 3 <strong>books</strong> (add S)<br>
+          1 <strong>bus</strong> → 2 <strong>buses</strong> (add ES — because it ends in S!)<br>
+          1 <strong>box</strong> → 2 <strong>boxes</strong> (add ES — ends in X!)<br><br>
+          Some words are <span class="highlight-word">irregular</span> — they change completely!<br>
+          1 <strong>child</strong> → many <strong>children</strong><br>
+          1 <strong>tooth</strong> → many <strong>teeth</strong><br>
+          1 <strong>man</strong> → many <strong>men</strong> 👨‍👨‍👦`
+        },
+        quiz: [
+          { q: "What is the plural of 'dog'?", opts: ["Dogges","Doges","Dogs","Dogz"], ans: 2 },
+          { q: "What is the plural of 'bus'?", opts: ["Buss","Busies","Buse","Buses"], ans: 3 },
+          { q: "What is the plural of 'child'?", opts: ["Childs","Childes","Childrens","Children"], ans: 3 },
+          { q: "What is the plural of 'tooth'?", opts: ["Tooths","Toothes","Teeth","Teeths"], ans: 2 }
+        ],
+        funFact: "In the Twi language, plurals work differently! You often add 'nom' to show many: 'onipa' (person) → 'nnipa' (people). Every language has its own plural rules. Learning English plurals helps you understand grammar patterns in ANY language! 🌍📚"
+      },
+      {
+        type: "science",
+        icon: "🦋",
+        iconClass: "icon-science",
+        title: "Science",
+        subtitle: "Life Cycles",
+        lesson: {
+          title: "📚 Let's Learn: How a Butterfly is Born 🦋",
+          text: `Living things grow and change over time — this is called a <span class="highlight-word">life cycle</span>! The butterfly has one of the most AMAZING life cycles:<br><br>
+          🥚 <strong>Stage 1 — Egg:</strong> A tiny egg laid on a leaf<br>
+          🐛 <strong>Stage 2 — Caterpillar (Larva):</strong> Hatches and EATS and grows<br>
+          🫘 <strong>Stage 3 — Pupa (Chrysalis):</strong> Wraps itself in a cocoon and transforms<br>
+          🦋 <strong>Stage 4 — Butterfly (Adult):</strong> A beautiful butterfly breaks free!<br><br>
+          This amazing change is called <span class="highlight-word">metamorphosis</span> (met-a-MORE-fo-sis)! Even frogs go through metamorphosis: egg → tadpole → frog! 🐸`
+        },
+        quiz: [
+          { q: "What comes AFTER the egg in a butterfly's life cycle?", opts: ["Adult","Pupa","Butterfly","Caterpillar"], ans: 3 },
+          { q: "What is the 3rd stage of a butterfly's life cycle?", opts: ["Egg","Butterfly","Pupa","Caterpillar"], ans: 2 },
+          { q: "What is the name for the dramatic change a butterfly goes through?", opts: ["Revolution","Metamorphosis","Transformation","Evolution"], ans: 1 },
+          { q: "A tadpole grows into a...?", opts: ["Fish","Lizard","Frog","Snake"], ans: 2 }
+        ],
+        funFact: "Inside the chrysalis (cocoon), the caterpillar doesn't just grow wings — it literally DISSOLVES itself into a liquid soup and completely rebuilds into a butterfly from scratch! 🦋 Scientists have discovered that butterflies can remember things they learned as caterpillars. The memory survives the meltdown! 🤯"
+      },
+      {
+        type: "creative",
+        icon: "📝",
+        iconClass: "icon-creative",
+        title: "Creative Writing",
+        subtitle: "Writing Your Own Story",
+        lesson: {
+          title: "📚 Let's Create: Write a Mini Story! ✍️",
+          text: `Today you are the <span class="highlight-word">author</span>! Use what you learned about stories (beginning, middle, end) to create your very own!<br><br>
+          <strong>Story Starter Toolbox:</strong><br><br>
+          👤 <span class="highlight-word">Characters:</span> Kofi, Ama, a lion, a talking parrot, a brave girl...<br>
+          📍 <span class="highlight-word">Settings:</span> a forest, a market, a school, the beach, a farm...<br>
+          ❓ <span class="highlight-word">Problems:</span> got lost, found a treasure, met a strange animal...<br>
+          ✅ <span class="highlight-word">Endings:</span> was rescued, made a new friend, learned a lesson...<br><br>
+          Example starter: <em>"One sunny morning in Accra, a boy named Kweku found a <span class="highlight-word">golden egg</span> under his bed..."</em> 🥚✨<br><br>
+          What happens next? <strong>You decide!</strong> 🖊️`
+        },
+        quiz: [
+          { q: "What do we call the person who writes a story?", opts: ["Reader","Editor","Author","Printer"], ans: 2 },
+          { q: "The SETTING of a story is...?", opts: ["The ending","Where and when it happens","The main character","The problem"], ans: 1 },
+          { q: "What are the 3 main parts of a story?", opts: ["Start,Stop,End","Title,Body,Foot","Beginning,Middle,End","Chapter 1,2,3"], ans: 2 },
+          { q: "A CHARACTER in a story is...?", opts: ["The place","A person or animal in the story","The lesson","The title"], ans: 1 }
+        ],
+        funFact: "Roald Dahl — the author of Charlie and the Chocolate Factory 🍫 — wrote his stories in a tiny hut in his garden, sitting in an old armchair with a wooden board on his lap! He always used yellow pencils. Every great author has their own special writing habits. What will YOURS be? ✏️"
+      },
+      {
+        type: "gk",
+        icon: "🌍",
+        iconClass: "icon-gk",
+        title: "General Knowledge",
+        subtitle: "The Ocean & Water Bodies",
+        lesson: {
+          title: "📚 Let's Learn: Oceans, Rivers & Lakes 🌊",
+          text: `About <span class="highlight-word">71% of Earth</span> is covered in water! Here are the main water bodies:<br><br>
+          🌊 <span class="highlight-word">Ocean</span> — the largest, saltwater (there are 5 oceans!)<br>
+          &nbsp;&nbsp;&nbsp;Ghana borders the <strong>Atlantic Ocean</strong> 🌊<br><br>
+          🏞️ <span class="highlight-word">River</span> — freshwater that flows to the sea<br>
+          &nbsp;&nbsp;&nbsp;Ghana has the <strong>Volta River</strong> — one of Africa's great rivers!<br><br>
+          🏔️ <span class="highlight-word">Lake</span> — a body of still water surrounded by land<br>
+          &nbsp;&nbsp;&nbsp;<strong>Lake Volta</strong> in Ghana is one of the world's largest man-made lakes! 💧<br><br>
+          🌧️ <span class="highlight-word">Rain</span> — water from clouds that fills rivers and lakes`
+        },
+        quiz: [
+          { q: "What ocean does Ghana border?", opts: ["Indian Ocean","Pacific Ocean","Arctic Ocean","Atlantic Ocean"], ans: 3 },
+          { q: "What percentage of Earth is covered in water?", opts: ["30%","50%","71%","90%"], ans: 2 },
+          { q: "Lake Volta in Ghana is famous for being...?", opts: ["Deepest in Africa","One of the world's largest man-made lakes","The saltiest lake","Highest in Africa"], ans: 1 },
+          { q: "What is the difference between a river and a lake?", opts: ["Size","Rivers flow, lakes are still","Colour","Temperature"], ans: 1 }
+        ],
+        funFact: "Lake Volta in Ghana was created in 1965 when the Akosombo Dam was built on the Volta River. It generates hydroelectric power (electricity from water!) for Ghana and neighbouring countries! 💡🌊 It covers about 3.5% of Ghana's total land area — that's huge! 🇬🇭"
+      }
+    ]
+  },
+
+  // ==================== DAY 10 ====================
+  {
+    day: 10,
+    title: "Day 10 🎓",
+    subjects: [
+      {
+        type: "math",
+        icon: "🏆",
+        iconClass: "icon-math",
+        title: "Mathematics",
+        subtitle: "Big Review Challenge!",
+        lesson: {
+          title: "📚 Maths Mega Review — You've Got This! 🌟",
+          text: `Let's review everything we've learned in Maths! You're a <span class="highlight-word">maths champion</span>!<br><br>
+          ➕ <strong>Addition:</strong> Putting numbers together → 3 + 4 = 7<br>
+          ➖ <strong>Subtraction:</strong> Taking away → 9 – 3 = 6<br>
+          🔢 <strong>Counting by 10s:</strong> 10, 20, 30, 40, 50...<br>
+          📐 <strong>Shapes:</strong> Circle (0 corners), Triangle (3 sides), Square (4 equal sides)<br>
+          📏 <strong>Measurement:</strong> 100 cm = 1 metre<br>
+          ⏰ <strong>Time:</strong> Short hand = hours, Long hand = minutes, 24 hrs = 1 day<br>
+          🐊 <strong>Comparing:</strong> 7 > 4 (seven is greater than four)<br><br>
+          You have learned SO much — you are amazing! 🌟`
+        },
+        quiz: [
+          { q: "REVIEW: 6 + 4 = ?", opts: ["9","11","10","8"], ans: 2 },
+          { q: "REVIEW: 10 – 3 = ?", opts: ["6","8","5","7"], ans: 3 },
+          { q: "REVIEW: A triangle has how many sides?", opts: ["4","2","5","3"], ans: 3 },
+          { q: "REVIEW: 100 cm = how many metres?", opts: ["10","100","2","1"], ans: 3 }
+        ],
+        funFact: "You have now learned the foundations of maths that even engineers, doctors, and scientists use every single day! 🔬 The maths you learned this week — counting, adding, measuring, patterns — is the same foundation that was used to build Ghana's Kotoka Airport and design the Akosombo Dam! You are on your way! 🚀"
+      },
+      {
+        type: "english",
+        icon: "📖",
+        iconClass: "icon-english",
+        title: "English Language",
+        subtitle: "Big English Review!",
+        lesson: {
+          title: "📚 English Mega Review — Superstar Reader! ⭐",
+          text: `Look how much English you've learned this week!<br><br>
+          🔤 <strong>Vowels:</strong> A, E, I, O, U — special letters in every word<br>
+          📝 <strong>Nouns:</strong> naming words (cat, school, Ghana)<br>
+          🏃 <strong>Verbs:</strong> action words (run, eat, sing, jump)<br>
+          🌈 <strong>Adjectives:</strong> describing words (big, red, happy)<br>
+          ↔️ <strong>Opposites:</strong> Hot/Cold, Big/Small, Day/Night<br>
+          📖 <strong>Sentences:</strong> Start with Capital, end with full stop (.)<br>
+          🐾 <strong>Plurals:</strong> cat → cats, child → children<br><br>
+          Put it all together: <em>"The <span class="highlight-word">small</span> [adjective] <span class="highlight-word">children</span> [noun, plural] <span class="highlight-word">run</span> [verb] happily."</em> ✅`
+        },
+        quiz: [
+          { q: "REVIEW: Which word is a NOUN?", opts: ["Run","Beautiful","Quickly","School"], ans: 3 },
+          { q: "REVIEW: Which word is a VERB?", opts: ["Happy","Dance","Tall","Blue"], ans: 1 },
+          { q: "REVIEW: What is the opposite of COLD?", opts: ["Warm","Hot","Cool","Mild"], ans: 1 },
+          { q: "REVIEW: What is the plural of 'man'?", opts: ["Mans","Manes","Menz","Men"], ans: 3 }
+        ],
+        funFact: "The English language is used by over 1.5 BILLION people around the world — more than any other language! 🌍 But here's something to be proud of: being able to speak BOTH English AND a Ghanaian language like Twi, Ga, Ewe, or Hausa makes you more intelligent! Studies show bilingual people have stronger brains! 🧠🇬🇭"
+      },
+      {
+        type: "science",
+        icon: "🔬",
+        iconClass: "icon-science",
+        title: "Science",
+        subtitle: "Big Science Review!",
+        lesson: {
+          title: "📚 Science Mega Review — Young Scientist! 🔭",
+          text: `Congratulations, young scientist! Here's what you've mastered:<br><br>
+          🧍 <strong>Body Parts:</strong> Eyes see, ears hear, nose smells, tongue tastes, skin touches<br>
+          🌱 <strong>Plants:</strong> Roots, stem, leaves, flower, fruit<br>
+          💧 <strong>Water Cycle:</strong> Evaporation → Clouds → Rain → Rivers<br>
+          ☀️ <strong>Solar System:</strong> 8 planets, Earth is 3rd, Sun is a star<br>
+          🪨 <strong>States of Matter:</strong> Solid, Liquid, Gas<br>
+          🦋 <strong>Life Cycles:</strong> Egg → Caterpillar → Pupa → Butterfly<br>
+          👉 <strong>Forces:</strong> Push and Pull<br>
+          🌍 <strong>Day & Night:</strong> Earth spins in 24 hours<br><br>
+          Science is everywhere! 🌟`
+        },
+        quiz: [
+          { q: "REVIEW: How many planets are in our solar system?", opts: ["6","9","10","8"], ans: 3 },
+          { q: "REVIEW: What does a plant's ROOTS do?", opts: ["Make food","Make flowers","Absorb water","Hold seeds"], ans: 2 },
+          { q: "REVIEW: Ice is an example of a...?", opts: ["Gas","Liquid","Solid","Vapour"], ans: 2 },
+          { q: "REVIEW: Which stage comes AFTER the caterpillar?", opts: ["Egg","Butterfly","Pupa","Adult"], ans: 2 }
+        ],
+        funFact: "Every single thing you see around you — your chair, the air you breathe, the food you eat, the stars in the sky — can be explained by science! Science is not just in a textbook; it's the language of the universe. And YOU are a young scientist! Keep asking 'WHY?' — that's where all great discoveries start! 🚀🔬"
+      },
+      {
+        type: "creative",
+        icon: "🎨",
+        iconClass: "icon-creative",
+        title: "Creative Arts",
+        subtitle: "My Creative Portfolio!",
+        lesson: {
+          title: "📚 Creative Review — You Are An Artist! 🖼️",
+          text: `Look at everything you've created and learned in Creative Arts!<br><br>
+          🌈 <strong>Colours:</strong> Primary (Red, Blue, Yellow) and Mixing them!<br>
+          🔴 <strong>Rainbow:</strong> ROY G BIV — 7 colours<br>
+          ⭐ <strong>Shapes in Art:</strong> Everything is made of shapes!<br>
+          🎵 <strong>Rhythm:</strong> The heartbeat of music — Ghana's drumming is world-famous!<br>
+          📖 <strong>Storytelling:</strong> Beginning, Middle, End — like Anansi stories<br>
+          🎎 <strong>Crafts:</strong> Kente, pottery, wood carving, Krobo beads<br>
+          ✍️ <strong>Writing:</strong> You can create your own stories!<br><br>
+          <span class="highlight-word">Your creativity is your superpower!</span> 🦸 Never stop making art! 🎨`
+        },
+        quiz: [
+          { q: "REVIEW: Red + Blue = ?", opts: ["Green","Orange","Brown","Purple"], ans: 3 },
+          { q: "REVIEW: How many colours are in a rainbow?", opts: ["5","6","8","7"], ans: 3 },
+          { q: "REVIEW: Which Ghanaian spider is a famous storyteller?", opts: ["Kweku","Anansi","Kofi","Akua"], ans: 1 },
+          { q: "REVIEW: Kente cloth is made by which craft?", opts: ["Pottery","Beading","Weaving","Carving"], ans: 2 }
+        ],
+        funFact: "Throughout history, art has been how humans communicate what words cannot express. Ghana's Adinkra symbols 🔣 are a perfect example — each symbol is a drawing that contains a whole proverb or life lesson! For example, the 'Gye Nyame' symbol means 'Except God' — a statement of faith and humility. Art carries wisdom! 🇬🇭✨"
+      },
+      {
+        type: "gk",
+        icon: "🏆",
+        iconClass: "icon-gk",
+        title: "General Knowledge",
+        subtitle: "Big World Review!",
+        lesson: {
+          title: "📚 GK Mega Review — World Explorer! 🌍",
+          text: `You've explored the whole world this week! Let's recap:<br><br>
+          🇬🇭 <strong>Ghana:</strong> Capital Accra, first president Dr. Nkrumah, independence 1957<br>
+          🌍 <strong>Continents:</strong> 7 — Africa is home, Asia is the biggest<br>
+          🦁 <strong>Animals:</strong> Wild (lion, elephant) vs Domestic (dog, cow)<br>
+          🛣️ <strong>Transport:</strong> Land, Water, Air — Kotoka Airport is ours!<br>
+          👮 <strong>Community:</strong> Teachers, doctors, farmers, police — all heroes!<br>
+          🍎 <strong>Food Groups:</strong> Carbs, Proteins, Fruits, Vegetables, Water<br>
+          🌊 <strong>Water Bodies:</strong> Atlantic Ocean, Volta River, Lake Volta<br>
+          💻 <strong>Technology:</strong> Tools that make life easier — Ghana in space! 🛰️`
+        },
+        quiz: [
+          { q: "REVIEW: Who was Ghana's first president?", opts: ["Kufuor","Rawlings","Nkrumah","Mahama"], ans: 2 },
+          { q: "REVIEW: How many continents are there?", opts: ["5","6","8","7"], ans: 3 },
+          { q: "REVIEW: Which ocean does Ghana border?", opts: ["Pacific","Indian","Arctic","Atlantic"], ans: 3 },
+          { q: "REVIEW: Which food group gives us energy?", opts: ["Fruits","Water","Proteins","Carbohydrates"], ans: 3 }
+        ],
+        funFact: "🎓 YOU DID IT! You just completed a 10-day Learning Adventure covering Maths, English, Science, Creative Arts, and General Knowledge! You learned about Ghana, the solar system, butterflies, colours, grammar, forces, and SO much more. You are smarter today than you were 10 days ago. This is just the beginning — the world is yours to explore! Keep learning every day! 🌟🚀❤️"
+      }
+    ]
+  }
+];
+
+// ==================== STATE ====================
+let studentName = "";
+let totalStars = 0;
+let currentDay = 0;
+let completedDays = [];
+let answeredQuestions = {};
+
+// ==================== FUNCTIONS ====================
+
+function startLearning() {
+  const nameInput = document.getElementById('student-name').value.trim();
+  studentName = nameInput || "Champion";
+  document.getElementById('welcome-screen').classList.add('hidden');
+  document.getElementById('learning-screen').classList.remove('hidden');
+  buildDayTabs();
+  loadDay(0);
+}
+
+function buildDayTabs() {
+  const tabs = document.getElementById('day-tabs');
+  tabs.innerHTML = '';
+  DAYS.forEach((d, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'day-tab' + (i === currentDay ? ' active' : '') + (completedDays.includes(i) ? ' completed' : '');
+    btn.textContent = d.title;
+    btn.onclick = () => loadDay(i);
+    tabs.appendChild(btn);
+  });
+  // Update nav buttons
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const indicator = document.getElementById('day-indicator-num');
+  if (prevBtn) prevBtn.disabled = currentDay === 0;
+  if (nextBtn) nextBtn.disabled = currentDay === DAYS.length - 1;
+  if (indicator) indicator.textContent = 'Day ' + (currentDay + 1);
+}
+
+function goToPrevDay() {
+  if (currentDay > 0) {
+    loadDay(currentDay - 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function goToNextDay() {
+  if (currentDay < DAYS.length - 1) {
+    loadDay(currentDay + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function loadDay(dayIndex) {
+  currentDay = dayIndex;
+  buildDayTabs();
+  const day = DAYS[dayIndex];
+  const content = document.getElementById('lesson-content');
+  content.innerHTML = '';
+
+  // Progress bar
+  const totalQ = day.subjects.reduce((a, s) => a + s.quiz.length, 0);
+  const answeredToday = Object.keys(answeredQuestions).filter(k => k.startsWith(`d${dayIndex}-`)).length;
+  const pct = Math.round((answeredToday / totalQ) * 100);
+
+  content.innerHTML = `
+    <div style="margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-family:'Baloo 2',cursive;font-weight:800;color:var(--purple);font-size:0.95rem;">
+          Hello, ${studentName}! 🌟 Today's Progress
+        </span>
+        <span style="font-weight:700;color:var(--orange);font-size:0.9rem;">${answeredToday}/${totalQ} questions</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:${pct}%"></div></div>
+    </div>
+  `;
+
+  day.subjects.forEach((subject, si) => {
+    const card = document.createElement('div');
+    card.className = 'subject-card';
+    card.style.animationDelay = `${si * 0.08}s`;
+
+    let quizHTML = subject.quiz.map((q, qi) => {
+      const key = `d${dayIndex}-s${si}-q${qi}`;
+      const answered = answeredQuestions[key]; // true=correct, false=wrong attempt, undefined=untouched
+      const optsHTML = q.opts.map((o, oi) => {
+        let cls = '';
+        let disabled = false;
+        if (answered === true) {
+          // Correctly answered — lock all, highlight correct
+          disabled = true;
+          if (oi === q.ans) cls = 'correct-ans';
+        }
+        // If answered===false (wrong attempt), leave open for retry
+        return `<button class="option-btn ${cls}" onclick="answerQ('${key}',${oi},${q.ans},${dayIndex},${si},${qi})" ${disabled ? 'disabled' : ''}>${o}</button>`;
+      }).join('');
+
+      const feedbackClass = answered === true ? 'correct show' : '';
+      const feedbackText = answered === true ? '🎉 Correct! Well done!' : '';
+
+      return `
+        <div class="question-block ${answered === true ? 'correct' : ''}" id="qblock-${key}">
+          <div class="question-text">❓ ${q.q}</div>
+          <div class="options">${optsHTML}</div>
+          <div class="feedback ${feedbackClass}">${feedbackText}</div>
+        </div>
+      `;
+    }).join('');
+
+    let activityHTML = '';
+    if (subject.activity) {
+      if (subject.activity.type === 'count') {
+        const objs = subject.activity.objects.map((o, i) =>
+          `<span class="count-obj" id="obj-${si}-${i}" onclick="countObj(${si},${i},${subject.activity.objects.length})">${o}</span>`
+        ).join('');
+        activityHTML = `
+          <div class="activity-box">
+            <h5>✋ Try It: ${subject.activity.label}</h5>
+            <div class="counting-row">${objs}</div>
+            <p id="count-result-${si}" style="font-weight:700;color:var(--purple);margin-top:8px;"></p>
+          </div>`;
+      } else if (subject.activity.type === 'alphabet') {
+        const vowels = ['A','E','I','O','U'];
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l => {
+          const isVowel = vowels.includes(l);
+          return `<div class="alpha-letter" style="${isVowel ? 'background:linear-gradient(135deg,var(--orange),#C44)' : ''}" onclick="sayLetter('${l}',${isVowel})" title="${isVowel ? '⭐ VOWEL!' : 'Consonant'}">${l}</div>`;
+        }).join('');
+        activityHTML = `
+          <div class="activity-box">
+            <h5>🔤 ${subject.activity.label}</h5>
+            <div class="alpha-grid">${letters}</div>
+            <p style="font-size:0.82rem;color:#666;margin-top:8px;">🔴 Orange letters = Vowels (A, E, I, O, U)</p>
+          </div>`;
+      }
+    }
+
+    card.innerHTML = `
+      <div class="subject-header">
+        <div class="subject-icon ${subject.iconClass}">${subject.icon}</div>
+        <div>
+          <div class="subject-title">${subject.title}</div>
+          <div class="subject-subtitle">${subject.subtitle}</div>
+        </div>
+      </div>
+      <div class="lesson-box">
+        <h4>${subject.lesson.title}</h4>
+        <p>${subject.lesson.text}</p>
+      </div>
+      ${activityHTML}
+      <div class="quiz-section">
+        <h4>🧠 Quick Quiz — Answer these questions!</h4>
+        ${quizHTML}
+      </div>
+      <div class="fun-fact">
+        <span class="bulb">💡</span>
+        <p><strong>Fun Fact:</strong> ${subject.funFact}</p>
+      </div>
+    `;
+    content.appendChild(card);
+  });
+}
+
+let countCounts = {};
+
+function countObj(si, i, total) {
+  const key = `${si}-${i}`;
+  if (countCounts[key]) return;
+  countCounts[key] = true;
+  document.getElementById(`obj-${si}-${i}`).classList.add('counted');
+  const counted = Object.keys(countCounts).filter(k => k.startsWith(`${si}-`)).length;
+  const result = document.getElementById(`count-result-${si}`);
+  if (counted === total) {
+    result.textContent = `🎉 You counted ${total}! There are ${total} apples!`;
+    addStars(1);
+  } else {
+    result.textContent = `You counted ${counted} so far...`;
+  }
+}
+
+function sayLetter(letter, isVowel) {
+  const msg = isVowel
+    ? `${letter} is a VOWEL! Great find! ⭐`
+    : `${letter} is a consonant!`;
+  // Simple speech if available
+  if (window.speechSynthesis) {
+    const utt = new SpeechSynthesisUtterance(letter);
+    utt.rate = 0.8;
+    window.speechSynthesis.speak(utt);
+  }
+  showToast(msg, isVowel ? var_green : var_blue);
+}
+
+const var_green = '#06D6A0';
+const var_blue = '#4ECDC4';
+
+function showToast(msg, color) {
+  const t = document.createElement('div');
+  t.style.cssText = `position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:${color || '#9B5DE5'};color:white;padding:12px 24px;border-radius:50px;font-family:'Baloo 2',cursive;font-weight:700;font-size:1rem;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,0.2);animation:slideUp 0.3s ease;`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+function answerQ(key, chosen, correct, dayIndex, si, qi) {
+  // If already answered CORRECTLY, ignore
+  if (answeredQuestions[key] === true) return;
+
+  const block = document.getElementById(`qblock-${key}`);
+  const buttons = block.querySelectorAll('.option-btn');
+  const feedback = block.querySelector('.feedback');
+  const isCorrect = chosen === correct;
+  const day = DAYS[dayIndex];
+  const correctAns = day.subjects[si].quiz[qi].opts[correct];
+
+  if (isCorrect) {
+    // ✅ CORRECT — lock it, mark done
+    answeredQuestions[key] = true;
+    buttons.forEach((btn, i) => {
+      btn.disabled = true;
+      if (i === correct) btn.classList.add('correct-ans');
+    });
+    block.classList.remove('wrong');
+    block.classList.add('correct');
+    feedback.className = 'feedback correct show';
+    feedback.innerHTML = '🎉 Correct! Amazing job! ⭐';
+    addStars(2);
+  } else {
+    // ❌ WRONG — shake it, highlight wrong, allow retry
+    answeredQuestions[key] = false; // mark attempted but not correct
+
+    // Flash the wrong button red briefly
+    buttons[chosen].classList.add('wrong-ans');
+    buttons[chosen].disabled = true;
+    block.classList.add('wrong');
+
+    feedback.className = 'feedback wrong show';
+    feedback.innerHTML = `❌ Oops! Not quite — try again! 💪`;
+
+    // Re-enable other buttons after short delay
+    setTimeout(() => {
+      buttons.forEach((btn, i) => {
+        if (i !== chosen) btn.disabled = false;
+        // Keep wrong answer greyed out so they don't pick it again
+      });
+      block.classList.remove('wrong');
+      feedback.className = 'feedback wrong show';
+      feedback.innerHTML = `❌ That was wrong — pick another answer! 🤔`;
+    }, 900);
+  }
+
+  if (isCorrect) addStars(2);
+
+  // Update progress — only count CORRECT answers
+  const totalQ = day.subjects.reduce((a, s) => a + s.quiz.length, 0);
+  const correctToday = Object.entries(answeredQuestions).filter(([k,v]) => k.startsWith(`d${dayIndex}-`) && v === true).length;
+  const pct = Math.round((correctToday / totalQ) * 100);
+  const fill = document.getElementById('prog-fill');
+  if (fill) fill.style.width = pct + '%';
+
+  // Check if day complete — all correct
+  if (correctToday === totalQ && !completedDays.includes(dayIndex)) {
+    completedDays.push(dayIndex);
+    buildDayTabs();
+    setTimeout(() => showDayComplete(), 600);
+  }
+}
+
+function addStars(n) {
+  totalStars += n;
+  document.getElementById('star-count').textContent = totalStars;
+}
+
+function showDayComplete() {
+  launchConfetti();
+  const stars = Math.min(5, 3 + (completedDays.length > 3 ? 2 : completedDays.length > 1 ? 1 : 0));
+  document.getElementById('modal-stars').textContent = '⭐'.repeat(stars);
+  document.getElementById('modal-message').textContent =
+    `Fantastic work, ${studentName}! You completed Day ${currentDay + 1} and earned ${totalStars} stars so far! You are a true learning champion! Keep going! 🏆`;
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+
+function launchConfetti() {
+  const colours = ['#FFD93D','#FF6B35','#4ECDC4','#9B5DE5','#06D6A0','#FF6B9D'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.cssText = `
+      left:${Math.random()*100}vw;
+      background:${colours[Math.floor(Math.random()*colours.length)]};
+      width:${6+Math.random()*8}px;
+      height:${6+Math.random()*8}px;
+      animation-duration:${1.5+Math.random()*2}s;
+      animation-delay:${Math.random()*0.5}s;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+    `;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3500);
+  }
+}
+
+// Enter key on name input
+document.getElementById('student-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startLearning();
+});
+
+// ==================== SERVICE WORKER ====================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(r => console.log('SW ready:', r.scope))
+      .catch(e => console.log('SW error:', e));
+  });
+}
+
+// ==================== INSTALL PROMPT ====================
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const banner = document.createElement('div');
+  banner.id = 'pwa-banner';
+  banner.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#9B5DE5,#FF6B35);color:white;padding:14px 20px;border-radius:50px;font-family:Baloo 2,cursive;font-weight:700;font-size:0.95rem;z-index:9999;box-shadow:0 8px 30px rgba(155,93,229,0.45);display:flex;align-items:center;gap:10px;white-space:nowrap;';
+  banner.innerHTML = '\u{1F4F1} Add to Home Screen! <button id="pwa-install-btn" style="background:white;color:#9B5DE5;border:none;border-radius:50px;padding:6px 14px;font-weight:800;cursor:pointer;">Install</button><span id="pwa-close" style="cursor:pointer;opacity:0.7;padding-left:6px;">\u2715</span>';
+  document.body.appendChild(banner);
+  document.getElementById('pwa-install-btn').onclick = installPWA;
+  document.getElementById('pwa-close').onclick = () => banner.remove();
+});
+
+function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(c => {
+    if (c.outcome === 'accepted') showToast('\u2705 KidBro Learn added to home screen!', '#06D6A0');
+    deferredPrompt = null;
+    const b = document.getElementById('pwa-banner');
+    if (b) b.remove();
+  });
+}
+</script>
+</body>
+</html>
